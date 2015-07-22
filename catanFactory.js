@@ -8,7 +8,13 @@ var catanFactory = function () {
 			[{ id: 8 }, { id: 10 }, { id: 9 }, { id: 3 }],
 			[{ id: 5 }, { id: 2 }, { id: 6 }, ]
 		],
-		
+		costs: {
+			// TODO: look up the values!
+			village: 0,
+			town: 0,
+			road: 0,
+			development: 0
+		}
 
 	};
 
@@ -19,7 +25,6 @@ var catanFactory = function () {
 			'wood',
 			'wood',
 			'wood',
-			'grain',
 			'grain',
 			'grain',
 			'grain',
@@ -81,12 +86,17 @@ var catanFactory = function () {
 	var players = function () {
 
 		var player = function () {
-
+			
 			var building = {
 				init: function (buildingType, coordinates, resourceCost) {
 					this.buildingType = buildingType;
 					this.coordinates = coordinates;
 					this.resourceCost = resourceCost;
+				},
+				coordinates: {
+					x: null,
+					y: null,
+					z: null
 				}
 				// TODO: add properties
 			};
@@ -97,20 +107,15 @@ var catanFactory = function () {
 					sheep: 0,
 					grain: 0,
 					clay: 0,
-					rocks: 0
+					rocks: 0,
 				},
 				towns: [],
 				roads: [],
 				developments: [],
-
-				build: function () {
-					throw new Error("NOT IMPLEMENTED!");
-				},
-				get points() {
-					return this._points;
-				},
-
-
+				points: 0,
+				build: function (building, coordinates) {
+					// TODO: implement
+				}
 			};
 		} ();
 
@@ -126,6 +131,7 @@ var catanFactory = function () {
 
 	return {
 		getField: function () {
+			console.log("field requested");
 			return field;
 		},
 		getPlayers: function (playerCount) {

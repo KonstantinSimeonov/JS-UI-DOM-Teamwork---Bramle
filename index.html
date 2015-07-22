@@ -3,17 +3,11 @@
 	<head>
 		<meta charset="UTF-8">
 	</head>
-	<body onload="">
-		<canvas id="canvas" width="1500px" height="1100px">	</canvas>
+	<body onload="catanEngine.init(GUI, catanFactory).run();">
+		<canvas id="canvas" width="1500px" height="1100px"></canvas>
 		<script type="text/javascript" src="catanFactory.js"></script>
 		<script type="text/javascript" src="drawField.js"></script>
-		<!--<script type="text/javascript" src="catanEngine.js"></script>-->
-		<script type="text/javascript">
-			var gui = GUI.init();
-			var field = catanFactory.getField().init();
-			console.log(field.layout);
-			gui.drawField(field.layout);
-			
-		</script>
+		<script type="text/javascript" src="catanEngine.js"></script>
 	</body>
+
 </html>

@@ -69,13 +69,10 @@ var GUI = function () {
 		resourceTypes: ['wood', 'sheep', 'grain', 'rocks', 'clay', 'none']
 	};
 
-	function fillField(fieldLayout) {		
+	function fillField(fieldLayout) {
 		var images = {},
 			tileMetrics,
 			rowOffsetX;
-			
-		
-		
 
 		for (var i = 0; i < CONSTANTS.resourceTypes.length; i += 1) {
 			images[CONSTANTS.resourceTypes[i]] = new Image();
@@ -83,37 +80,54 @@ var GUI = function () {
 		}
 
 		tileMetrics = { h: images['rocks'].height, w: images['rocks'].width };
-		
+
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
-		
-		var lineVector = {x: 0.3, y: 0.6};
-		
-		this.context.beginPath();
-		this.context.moveTo(0, 0);
-		var x = lineVector.x, y = lineVector.y;
 		
 		// TODO: implement field animations here
 		
-		// for (var i = 0; i < 1000; i+=1) {
-		// 	var element = array[index];
-		// 	
-		// }
-		
 		for (var i = 0, len1 = fieldLayout.length; i < len1; i += 1) {
 			for (var j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
-				this.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j*tileMetrics.w, (i + 0.25) * (tileMetrics.h / 1.33333));
+				this.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w, (i + 0.25) * (tileMetrics.h / 1.33333));
 			}
 		}
 	}
 
+	function fillPlayerInterface(players) {
+		var redPlayer = { color: 'red', startingPoint: { x: 10, y: 20 } },
+			yUpdate = 30;
+
+		this.context.font = '20px Verdana';
+		this.context.fillStyle = 'red';
+		this.context.fillText('Red Player', redPlayer.startingPoint.x, redPlayer.startingPoint.y);
+
+		this.context.font = '14px Times New Roman';
+		this.context.fillStyle = 'black';
+
+		for (var i = 0, len = CONSTANTS.resourceTypes.length, keys = CONSTANTS.resourceTypes; i < len; i += 1) {
+			if (keys[i] !== 'none') {
+				this.context.fillText(keys[i] + ': ' + players.resources[keys[i]], 10, 20 + yUpdate);
+				yUpdate += 20;
+			}
+
+		}
+
+		document.body.appendChild(document.createElement('button'));
+		var button = document.getElementsByTagName('button')[0];
+		button.innerHTML = 'Building';
+	}
+
 	return {
 		init: function () {
+			console.log("gui init");
 			this.canvas = document.getElementById('canvas');
 			this.context = this.canvas.getContext('2d');
 			return this;
 		},
 		drawField: function (fieldLayout) {
 			fillField.call(this, fieldLayout);
+		},
+		drawPlayerGUI: function (players) {
+			fillPlayerInterface.call(this, players);
 		}
 	};
 

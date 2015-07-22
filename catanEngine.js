@@ -1,20 +1,20 @@
-// 
-// 
-// var catanEngine = function () {
-// 	var imports = {
-// 		factory: window.catanFactory,
-// 		GUI: window.GUI
-// 	},
-// 		field = imports.factory.getField(),
-// 		players = imports.factory.getPlayers(),
-// 		gui = imports.GUI;
-// 
-// 	field.init();
-// 	gui.init();
-// 
-// 	return {
-// 		drawField: function () {
-// 			gui.drawField(field.layout);
-// 		}
-// 	};
-// } ();
+var catanEngine = function () {
+	
+	return {
+		init: function (gui, factory) {
+			console.log("engine init");
+			this.gui = gui;
+			this.factory = factory;
+			return this;
+		},
+		run: function () {
+			console.log("engine run");
+			var field = this.factory.getField();
+			field.init();
+			this.gui.init();
+			this.gui.drawField(field.layout);
+			this.gui.drawPlayerGUI(this.factory.getPlayers().red);
+			
+		}
+	};
+} ();
