@@ -13,7 +13,7 @@ var catanEngine = function () {
 			field.init();
 			this.gui.init();
 			this.gui.drawField(field.layout);
-			this.gui.drawPlayerGUI(this.factory.getPlayers().red);
+			this.gui.drawPlayerGUI(this.factory.getPlayers());
 			
 		}
 	};
