@@ -17,7 +17,8 @@ var GUI = function () {
 			},
 			styles: {
 				fontStyles: {
-					playerName: '20px Verdana'
+					playerName: '20px Verdana',
+					tileNumber: '60px Verdana'
 				},
 				fontColors: ['red', 'blue', 'green', 'yellow']
 			},
@@ -43,7 +44,8 @@ var GUI = function () {
 			len1,
 			len2,
 			i,
-			j;
+			j,
+			self = this;
 
 		for (i = 0; i < CONSTANTS.resourceTypes.length; i += 1) {
 			images[CONSTANTS.resourceTypes[i]] = new Image();
@@ -58,7 +60,10 @@ var GUI = function () {
 		
 		for (i = 0, len1 = fieldLayout.length; i < len1; i += 1) {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
-				this.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w, (i + 0.25) * (tileMetrics.h / 1.33333));
+				self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w, (i + 0.25) * (tileMetrics.h / 1.33333));
+				self.context.fillStyle = 'white';
+				self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
+				self.context.fillText(fieldLayout[i][j].id.toString(), rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w/2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h/1.75);
 			}
 		}
 	}
@@ -74,14 +79,18 @@ var GUI = function () {
 			len,
 			currentOffsetX,
 			self = this;
-
+		
+		// draw names
+		
 		self.context.font = styles.fontStyles.playerName;
 		self.context.fillStyle = styles.fontColors[playerNumber - 1];
 		self.context.fillText('Player ' + playerNumber, startingPoint.x, startingPoint.y);
 
 		resourceHand = new Image();
 		resourceHand.src = CONSTANTS.playerUI.imagePaths.resourceHand;
-
+		
+		// draw resource hand
+		
 		handOffset = CONSTANTS.playerUI.coordinates.cardsOffset;
 		self.context.drawImage(resourceHand, startingPoint.x + handOffset.x, startingPoint.y + handOffset.y);
 
@@ -89,15 +98,19 @@ var GUI = function () {
 			x: startingPoint.x + handOffset.x,
 			y: startingPoint.y + handOffset.y + resourceHand.height + 40
 		};
-
+		
+		// draw buttons
+		
 		self.context.fillText(controlNames.tradeButton, buttonsOffset.x, buttonsOffset.y);
 		self.context.fillText(controlNames.buildButton, buttonsOffset.x + 100, buttonsOffset.y);
 		
-		player.resources.grain+=5;
+		var tooltipOffsetY = [30, 0, -15, 0, 30];
 		
-		for (i = 0, len = CONSTANTS.resourceTypes.length - 1, currentOffsetX = 20; i < len; i+=1) {
-			self.context.fillText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX, startingPoint.y + handOffset.y - 15);
-			currentOffsetX+=30;
+		// draw resource values
+		
+		for (i = 0, len = CONSTANTS.resourceTypes.length - 1, currentOffsetX = 10; i < len; i+=1) {
+			self.context.fillText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX, startingPoint.y + handOffset.y + tooltipOffsetY[i]);
+			currentOffsetX+=35;
 			
 		}
 
@@ -124,7 +137,7 @@ var GUI = function () {
 				coordinates = CONSTANTS.playerUI.coordinates,
 				coords = [coordinates.red, coordinates.blue, coordinates.green, coordinates.yellow],
 				gui = this;
-			console.log(players.red === players.blue);
+			
 			playersArray.map(function (player) {
 				fillPlayerInterface.call(gui, playersArray[currentPlayerNumber - 1], coords[currentPlayerNumber - 1], currentPlayerNumber++);
 			});
