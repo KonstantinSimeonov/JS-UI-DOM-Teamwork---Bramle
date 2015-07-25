@@ -118,7 +118,7 @@ var catanFactory = function () {
 					self.towns = [];
 					self.roads = [];
 					self.developments = [];
-					self.points = 0;
+					self.points = 0
 
 					return self;
 				},
