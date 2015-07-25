@@ -70,6 +70,9 @@ var GUI = function () {
 			buttonsOffset,
 			styles = CONSTANTS.playerUI.styles,
 			controlNames = CONSTANTS.playerUI.controlls.names,
+			i,
+			len,
+			currentOffsetX,
 			self = this;
 
 		self.context.font = styles.fontStyles.playerName;
@@ -89,6 +92,14 @@ var GUI = function () {
 
 		self.context.fillText(controlNames.tradeButton, buttonsOffset.x, buttonsOffset.y);
 		self.context.fillText(controlNames.buildButton, buttonsOffset.x + 100, buttonsOffset.y);
+		
+		player.resources.grain+=5;
+		
+		for (i = 0, len = CONSTANTS.resourceTypes.length - 1, currentOffsetX = 20; i < len; i+=1) {
+			self.context.fillText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX, startingPoint.y + handOffset.y - 15);
+			currentOffsetX+=30;
+			
+		}
 
 	}
 
@@ -103,6 +114,7 @@ var GUI = function () {
 			return self;
 		},
 		drawField: function (fieldLayout) {
+			
 			fillField.call(this, fieldLayout);
 		},
 		drawPlayerGUI: function (players) {
@@ -112,10 +124,11 @@ var GUI = function () {
 				coordinates = CONSTANTS.playerUI.coordinates,
 				coords = [coordinates.red, coordinates.blue, coordinates.green, coordinates.yellow],
 				gui = this;
-
+			console.log(players.red === players.blue);
 			playersArray.map(function (player) {
-				fillPlayerInterface.call(gui, player, coords[currentPlayerNumber - 1], currentPlayerNumber++);
+				fillPlayerInterface.call(gui, playersArray[currentPlayerNumber - 1], coords[currentPlayerNumber - 1], currentPlayerNumber++);
 			});
+
 		}
 	};
 

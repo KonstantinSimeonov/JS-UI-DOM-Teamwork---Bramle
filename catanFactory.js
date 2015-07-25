@@ -62,10 +62,8 @@ var catanFactory = function () {
 				self.layout = CONSTANTS.defaultField;
 				setWasteland(self.layout);
 
-
-
 				resources = terrain.sort(function (x, y) {
-					setTimeout(30);
+					setTimeout(100);
 					return Math.pow(-1, Math.ceil(Math.random() * 10) % 5);
 				});
 
@@ -106,17 +104,24 @@ var catanFactory = function () {
 			};
 
 			return {
-				resources: {
-					wood: 0,
-					sheep: 0,
-					grain: 0,
-					clay: 0,
-					rocks: 0,
+				init: function () {
+
+					var self = this;
+
+					self.resources = {
+						wood: 0,
+						sheep: 0,
+						grain: 0,
+						clay: 0,
+						rocks: 0,
+					};
+					self.towns = [];
+					self.roads = [];
+					self.developments = [];
+					self.points = 0;
+
+					return self;
 				},
-				towns: [],
-				roads: [],
-				developments: [],
-				points: 0,
 				build: function (building, coordinates) {
 					// TODO: implement! lol
 				}
@@ -124,10 +129,10 @@ var catanFactory = function () {
 		} ();
 
 		var players = {
-			red: Object.create(player),
-			green: Object.create(player),
-			blue: Object.create(player),
-			yellow: Object.create(player)
+			red: Object.create(player).init(),
+			green: Object.create(player).init(),
+			blue: Object.create(player).init(),
+			yellow: Object.create(player).init()
 		};
 
 		return players;
