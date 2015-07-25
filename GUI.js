@@ -152,13 +152,27 @@ var GUI = function () {
 			self.canvas = document.getElementById(CONSTANTS.canvas.id);
 			self.context = self.canvas.getContext(CONSTANTS.canvas.context);
 
+			// 70 412 
+				// 193 406 
+		 		// 351 406
+			
 			self.buttonCoordinates = {
-				isClicked: function (buttonName, playerNumber, clientX, clientY) {
-					var button = this[playerNumber][buttonName];
-					var x = (clientX > button.x - 100) && (button.x + 100 > clientX),
-						y = (clientY > button.y - 100) && (button.y + 100 > clientY);
-					console.log('clicked: ' + clientX + ' ' + clientY, 'expected: ' + button.x + ' ' + button.y);
-					return x && y;
+				isClicked: function (clientX, clientY) {
+					console.log(clientX, clientY);
+					if(clientY > 380 && clientY < 420) {
+						
+						if(clientX > 20 && clientX < 115) {
+							return 'Trade';
+						}
+						
+						if(clientX > 170 && clientX < 250) {
+							return 'Build';
+						}
+						
+						if(clientX > 330 && clientX < 390) {
+							return 'Roll';
+						}
+					} 
 				}
 			};
 
