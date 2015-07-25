@@ -12,6 +12,12 @@ var GUI = function () {
 				cardsOffset: { x: 0, y: 100 },
 				buttonSpacing: { x: 20, y: 0 }
 			},
+			circularCoordinates: [
+				{ x: 10, y: 20 },
+				{ x: 100, y: 900 },
+				{ x: 200, y: 1300 },
+				{ x: 300, y: 1700 }
+			],
 			imagePaths: {
 				resourceHand: 'images/player resource hand.jpg',
 			},
@@ -58,21 +64,18 @@ var GUI = function () {
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
 		
 		// TODO: implement field animations here
-		
-		console.log(images);
 
 		for (i = 0, len1 = fieldLayout.length; i < len1; i += 1) {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
-
-				self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w, (i + 0.25) * (tileMetrics.h / 1.33333));
+				self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 				self.context.fillStyle = 'white';
 				self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
-				self.context.fillText(fieldLayout[i][j].id.toString(), rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
+				self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 			}
 		}
 	}
 
-	function fillPlayerInterface(player, startingPoint, playerNumber) {
+	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
 
 		var resourceHand,
 			handOffset,
@@ -86,6 +89,8 @@ var GUI = function () {
 		
 		// draw names
 		
+		self.context.scale(scale.x, scale.y);
+
 		self.context.font = styles.fontStyles.playerName;
 		self.context.fillStyle = styles.fontColors[playerNumber - 1];
 		self.context.fillText('Player ' + playerNumber, startingPoint.x, startingPoint.y);
@@ -112,7 +117,7 @@ var GUI = function () {
 		self.buttonCoordinates[playerNumber] = {
 			Trade: {
 				x: buttonsOffset.x - 20,
-				y: buttonsOffset.y
+				y: buttonsOffset.y + 50
 			},
 			Build: {
 				x: buttonsOffset.x + 100,
@@ -120,6 +125,7 @@ var GUI = function () {
 			},
 			Roll: {
 				x: buttonsOffset.x + 200,
+				
 				y: buttonsOffset.y
 			},
 		};
@@ -133,6 +139,8 @@ var GUI = function () {
 			currentOffsetX += 35;
 
 		}
+		
+		self.context.scale(1/scale.x, 1/scale.y);
 
 	}
 
@@ -143,7 +151,7 @@ var GUI = function () {
 
 			self.canvas = document.getElementById(CONSTANTS.canvas.id);
 			self.context = self.canvas.getContext(CONSTANTS.canvas.context);
-			
+
 			self.buttonCoordinates = {
 				isClicked: function (buttonName, playerNumber, clientX, clientY) {
 					var button = this[playerNumber][buttonName];
@@ -160,17 +168,34 @@ var GUI = function () {
 
 			fillField.call(this, fieldLayout);
 		},
-		drawPlayerGUI: function (players) {
+		drawTownAt: function (x, y) {
+			var img = new Image();
+			img.src = 'images/village.png';
+			this.context.scale(1.3, 1.3);
+			this.context.drawImage(img, x/1.3, y/1.3);
+			this.context.scale(1/1.3, 1/1.3);	
+		},
+		drawPlayerGUI: function (players, playerTurn) {
 
 			var playersArray = [players.red, players.blue, players.green, players.yellow],
-				currentPlayerNumber = 1,
-				coordinates = CONSTANTS.playerUI.coordinates,
-				coords = [coordinates.red, coordinates.blue, coordinates.green, coordinates.yellow],
+				currentPlayerNumber = playerTurn,
+				coords = CONSTANTS.playerUI.circularCoordinates,
 				gui = this;
-
-			playersArray.map(function (player) {
-				fillPlayerInterface.call(gui, playersArray[currentPlayerNumber - 1], coords[currentPlayerNumber - 1], currentPlayerNumber++);
-			});
+			
+			for (var i = 0; i < 4; i+=1) {
+				var scale = i === 0 ? { x: 1.5, y: 1.3 } : { x: 0.5, y: 0.5 };
+				fillPlayerInterface.call(gui, playersArray[playerTurn - 1], coords[i], playerTurn++, scale);
+				playerTurn%=5;
+				if(playerTurn === 0) {
+					playerTurn+=1;
+				}
+			}
+			
+			// playersArray.map(function (player) {
+			// 	var scale = currentPlayerNumber === 1 ? { x: 1.5, y: 1.3 } : { x: 0.5, y: 0.5 };
+			// 	fillPlayerInterface.call(gui, playersArray[currentPlayerNumber - 1], coords[currentPlayerNumber - 1], currentPlayerNumber++, scale);
+			// 	currentPlayerNumber%=5;
+			// });
 		},
 		animateDice: function (dice1, dice2) {
 			// Stefcho gledai tuk!
