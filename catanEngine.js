@@ -11,9 +11,7 @@ var catanEngine = function () {
 			return self;
 		},
 		run: function () {
-
-
-
+			
 			var playerColors = ['red', 'blue', 'green', 'yellow'];
 
 			var self = this,
@@ -23,10 +21,43 @@ var catanEngine = function () {
 				buildMode = false;
 
 			function controllerIsClicked(e) {
+				
+				if(self.gui.clickedInsideTownArea(e)) {
+					console.log('bomba');
+					self.gui.drawTownAt(e.clientX, e.clientY);
+				}
+				
+				
+				
 				console.log(e.clientX, e.clientY);
-				alert(self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY));
+				// alert('{x:'+e.clientX + ', y:' + e.clientY+' , tiles:[]}');
+				var command = self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY);
+
+				switch (command) {
+					case 'Roll':
+						var dice1 = self.roll(),
+							dice2 = self.roll();
+						var sum = dice1 + dice2;
+
+						if (sum !== 7) {
+							field.layout.map(function (row) {
+								row.map(function (tile) {
+									if (tile.id === sum) {
+										console.log('match da ima ' + tile.id);
+										// TODO: distribute resource here.
+									}
+								});
+							});
+						} else {
+							// TODO: bandits
+						}
+						break;
+
+					default:
+						break;
+				}
 			}
-			
+
 			function chooseTowns() {
 				
 				// this functions lets us use encapsulated variables
@@ -59,28 +90,6 @@ var catanEngine = function () {
 			var diceResult1 = self.roll(),
 				diceResult2 = self.roll();
 			// gui.animateDice();
-// 			
-// 			var canvas = document.getElementById('canvas');
-// 			canvas.onclick = function (e) {
-// 
-// 				if (GUI.buttonCoordinates.isClicked('Trade', currentPlayerTurn, e.clientX - canvas.offsetLeft, e.clientY + canvas.offsetTop)) {
-// 					alert('trade requested');
-// 				}
-// 				
-// 				// if(e.clientX > 770 &&  e.clientX < 870) {
-// 				// 	if(e.clientY > 240 && e.clientY < 330) {
-// 				// 		self.gui.drawTownAt(820, 280);
-// 				// 		console.log(currentPlayerTurn);
-// 				// 		players[playerColors[currentPlayerTurn]].towns.push({a: 0, b: 4, c: 5, settlementType: 'village'});
-// 				// 	}
-// 				// }
-// 				
-// 			}
-
-
-
-
-
 		},
 		roll: function rollDice() {
 			var diceResult = (Math.ceil(Math.random() * 1000) % 6) + 1;
