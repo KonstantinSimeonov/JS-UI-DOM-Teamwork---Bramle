@@ -9,18 +9,17 @@ var catanFactory = function () {
 			[{ id: 5 }, { id: 2 }, { id: 6 }, ]
 		],
 		costs: {
-			// TODO: look up the values!
-			village: 0,
-			town: 0,
-			road: 0,
-			development: 0
+			// TODO: see if an array implementation is needed
+			village: { wood: 1, clay: 1, sheep: 1, grain: 1 },
+			town: { grain: 2, rock: 3 },
+			road: { wood: 1, clay: 1 },
+			development: { sheep: 1, grain: 1, rock: 1 }
 		}
-
 	};
 
 	var field = function () {
-		
-		var terrain= [
+
+		var terrain = [
 			'wood',
 			'wood',
 			'wood',
@@ -53,32 +52,35 @@ var catanFactory = function () {
 
 		return {
 			init: function () {
-				this.layout = CONSTANTS.defaultField;
-				setWasteland(this.layout);
-				
-				
-				
-				 var resources =  terrain.sort(function (x,y) {
-					 setTimeout(30);
-					 return Math.pow(-1, Math.ceil(Math.random() * 10) % 5);
-				 }); //CONSTANTS.terrain.sort(function (x) {
-				// 	window.setTimeout(1);
-				// 	return Math.random();
-				// });
-				console.log(resources);
-				console.log(terrain);
-				for (var i = 0, len1 = this.layout.length; i < len1; i += 1) {
-					for (var j = 0, len2 = this.layout[i].length; j < len2; j += 1) {
+				var resources,
+					len1,
+					len2,
+					i,
+					j,
+					self = this;
 
-						if (this.layout[i][j].id === 7) {
+				self.layout = CONSTANTS.defaultField;
+				setWasteland(self.layout);
+
+
+
+				resources = terrain.sort(function (x, y) {
+					setTimeout(30);
+					return Math.pow(-1, Math.ceil(Math.random() * 10) % 5);
+				});
+
+				for (i = 0, len1 = self.layout.length; i < len1; i += 1) {
+					for (j = 0, len2 = self.layout[i].length; j < len2; j += 1) {
+
+						if (self.layout[i][j].id === 7) {
 							continue;
 						}
 
-						this.layout[i][j].resource = resources.pop();
+						self.layout[i][j].resource = resources.pop();
 					}
 				}
-				
-				return this;
+
+				return self;
 			}
 		};
 	} ();
@@ -86,12 +88,14 @@ var catanFactory = function () {
 	var players = function () {
 
 		var player = function () {
-			
+
 			var building = {
 				init: function (buildingType, coordinates, resourceCost) {
-					this.buildingType = buildingType;
-					this.coordinates = coordinates;
-					this.resourceCost = resourceCost;
+					var self = this;
+
+					self.buildingType = buildingType;
+					self.coordinates = coordinates;
+					self.resourceCost = resourceCost;
 				},
 				coordinates: {
 					x: null,
@@ -114,7 +118,7 @@ var catanFactory = function () {
 				developments: [],
 				points: 0,
 				build: function (building, coordinates) {
-					// TODO: implement
+					// TODO: implement! lol
 				}
 			};
 		} ();
@@ -131,13 +135,10 @@ var catanFactory = function () {
 
 	return {
 		getField: function () {
-			console.log("field requested");
 			return field;
 		},
 		getPlayers: function (playerCount) {
 			return players;
 		}
 	};
-
-
 } ();

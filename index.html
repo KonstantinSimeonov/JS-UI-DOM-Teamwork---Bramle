@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 	</head>
-	<body onload="catanEngine.init(GUI, catanFactory).run();">
+	<body onload="startGame();">
 		<canvas id="canvas" width="1700px" height="1100px"></canvas>
+		
 		<script type="text/javascript" src="catanFactory.js"></script>
 		<script type="text/javascript" src="GUI.js"></script>
 		<script type="text/javascript" src="catanEngine.js"></script>
+		<script type="text/javascript">
+			function startGame() {
+				catanEngine.init(GUI, catanFactory).run();
+			}
+		</script>
 	</body>
-
 </html>

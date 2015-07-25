@@ -2,19 +2,22 @@ var catanEngine = function () {
 	
 	return {
 		init: function (gui, factory) {
-			console.log("engine init");
-			this.gui = gui;
-			this.factory = factory;
-			return this;
+			
+			var self = this;
+			
+			self.gui = gui;
+			self.factory = factory;
+			
+			return self;
 		},
 		run: function () {
-			console.log("engine run");
-			var field = this.factory.getField();
-			field.init();
-			this.gui.init();
-			this.gui.drawField(field.layout);
-			this.gui.drawPlayerGUI(this.factory.getPlayers());
 			
+			var self = this,
+				field = self.factory.getField().init(),
+				players = self.factory.getPlayers();
+				
+			self.gui.init().drawField(field.layout);
+			self.gui.drawPlayerGUI(players);
 		}
 	};
 } ();
