@@ -211,9 +211,9 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
-		animateDice: function (dice1, dice2) {
-			// Stefcho gledai tuk!
-		}
+		
+
 	};
+
 
 } ();

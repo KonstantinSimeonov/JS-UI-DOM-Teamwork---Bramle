@@ -88,4 +88,13 @@ var catanEngine = function () {
 			return diceResult;
 		}
 	};
+	function attack(result) {
+	if (result < 6)
+		alert('You rolled ' + result + '. You missed your opponent!');
+	else
+		alert('You rolled ' + result + '. You hit your opponent!');
+}
+D6.dice(2, attack);
+
+
 } ();

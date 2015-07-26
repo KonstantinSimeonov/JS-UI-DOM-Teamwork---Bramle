@@ -5,14 +5,24 @@
 	</head>
 	<body onload="startGame();">
 		<canvas id="canvas" width="1700px" height="1100px"></canvas>
-		
+		<link rel="stylesheet" type="text/css" href="catanCSS.css">
 		<script type="text/javascript" src="catanFactory.js"></script>
 		<script type="text/javascript" src="GUI.js"></script>
+		<script type='text/javascript' src='d6.js'></script>
 		<script type="text/javascript" src="catanEngine.js"></script>
 		<script type="text/javascript">
 			function startGame() {
 				catanEngine.init(GUI, catanFactory).run();
 			}
 		</script>
+		<script type='text/javascript'>
+function attack(result) {
+	
+		alert('The result is ' + result + ' You can take the result from here and use it');
+	
+}
+D6.dice(2, attack);
+</script>
+
 	</body>
 </html>
