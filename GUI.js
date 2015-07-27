@@ -35,6 +35,7 @@ var GUI = function () {
 					rollButton: 'Roll',
 					endTurn: 'End Turn'
 				}
+<<<<<<< HEAD
 			},
 			townSpots: [
 				{ x: 860, y: 56, tiles: [0] },
@@ -55,12 +56,16 @@ var GUI = function () {
 				{ x: 1526, y: 440, tiles: [7, 11] },
 				{ x: 531, y: 630, tiles: [7] }
 			]
+=======
+			}
+>>>>>>> dcea876b1d12d8bb719e85e8b470edd517d1f6b6
 		},
 		canvas: {
 			id: 'canvas',
 			context: '2d'
 		}
 	};
+
 
 	function fillField(fieldLayout) {
 
@@ -77,16 +82,24 @@ var GUI = function () {
 			images[CONSTANTS.resourceTypes[i]] = new Image();
 			images[CONSTANTS.resourceTypes[i]].src = 'images/' + CONSTANTS.resourceTypes[i] + '.png';
 		}
+        console.log(images);
+		tileMetrics = { h: 255, w: 221 };
 
-		tileMetrics = { h: images['rocks'].height, w: images['rocks'].width };
+        console.log(tileMetrics);
 
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
+        console.log(rowOffsetX);
 		
 		// TODO: implement field animations here
 
 		for (i = 0, len1 = fieldLayout.length; i < len1; i += 1) {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
-				self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
+
+
+               var imageName = fieldLayout[i][j].resource + '.png';
+
+
+				//self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 				self.context.fillStyle = 'white';
 				self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
 				self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
@@ -230,6 +243,7 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
+<<<<<<< HEAD
 		// this function now returns the index of the coordinates of a town spot or -1
 		// TODO: rename it appropriately
 		clickedInsideTownArea: function (e) {
@@ -256,6 +270,11 @@ var GUI = function () {
 		animateDice: function (dice1, dice2) {
 			// Stefcho gledai tuk!
 		}
+=======
+		
+
+>>>>>>> dcea876b1d12d8bb719e85e8b470edd517d1f6b6
 	};
+
 
 } ();
