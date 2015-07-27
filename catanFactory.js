@@ -94,6 +94,8 @@ var catanFactory = function () {
 					self.buildingType = buildingType;
 					self.coordinates = coordinates;
 					self.resourceCost = resourceCost;
+					
+					return this;
 				},
 				coordinates: {
 					x: null,
@@ -122,8 +124,28 @@ var catanFactory = function () {
 
 					return self;
 				},
-				build: function (building, coordinates) {
+				build: function (buildingType, coordinates) {
 					// TODO: implement! lol
+					
+					var cost = CONSTANTS.costs[buildingType];
+					var costKeys = Object.keys(cost);
+
+					for (var i = 0, len = costKeys.length; i < len; i+=1) {
+						// console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
+						if(this.resources[costKeys[i]] < cost[costKeys[i]]) {
+							return false;
+						}
+					}
+					
+					this[buildingType+'s'].push(Object.create(building.init(buildingType, coordinates)));
+					
+					for (i = 0; i < len; i+=1) {
+						this.resources[costKeys[i]] -= cost[costKeys[i]];
+						
+					}
+					
+					return true;
+					
 				}
 			};
 		} ();

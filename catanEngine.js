@@ -11,7 +11,7 @@ var catanEngine = function () {
 			return self;
 		},
 		run: function () {
-			
+
 			var playerColors = ['red', 'blue', 'green', 'yellow'];
 
 			var self = this,
@@ -19,16 +19,23 @@ var catanEngine = function () {
 				players = self.factory.getPlayers(),
 				currentPlayerTurn = 1,
 				buildMode = false;
-
+				
+			function handleBuildReques(player) {
+				
+			}	
+			
 			function controllerIsClicked(e) {
 				
-				if(self.gui.clickedInsideTownArea(e)) {
-					console.log('bomba');
-					self.gui.drawTownAt(e.clientX, e.clientY);
+				
+				
+				var spotIndex = self.gui.clickedInsideTownArea(e);
+				if (spotIndex != -1) {
+					
+					self.gui.drawTownAt(spotIndex);
 				}
-				
-				
-				
+
+
+
 				console.log(e.clientX, e.clientY);
 				// alert('{x:'+e.clientX + ', y:' + e.clientY+' , tiles:[]}');
 				var command = self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY);
@@ -52,7 +59,20 @@ var catanEngine = function () {
 							// TODO: bandits
 						}
 						break;
-
+					case 'Build':
+						console.log('build requested. feature not implemented yet');
+						players[playerColors[currentPlayerTurn]].resources = {
+							wood: 0,
+							grain: 2,
+							rocks: 3,
+							sheep: 1,
+							clay: 10
+						};
+						console.log(players[playerColors[currentPlayerTurn]].build('town', [0]));
+						break;
+					case 'Trade':
+						console.log('trade requested. feature not implemented yet');
+						break;
 					default:
 						break;
 				}
@@ -68,11 +88,17 @@ var catanEngine = function () {
 				var turns = [1, 2, 3, 4, 4, 3, 2, 1];
 
 				window.onclick = function (e) {
-					self.gui.drawTownAt(e.clientX, e.clientY);
-					// push in players inventory here
+					var spotIndex = self.gui.clickedInsideTownArea(e);
+
+					if (spotIndex !== -1) {
+						self.gui.drawTownAt(spotIndex);
+						// push in players inventory here
 					
-					self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
-					townsToPlace -= 1;
+						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
+
+						townsToPlace -= 1;
+					}
+
 
 					if (townsToPlace === 0) {
 						// set the event function to controllers

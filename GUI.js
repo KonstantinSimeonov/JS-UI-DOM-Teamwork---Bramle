@@ -53,7 +53,7 @@ var GUI = function () {
 				{ x: 1080, y: 440, tiles: [5, 6, 9] },
 				{ x: 1304, y: 437, tiles: [6, 7, 10] },
 				{ x: 1526, y: 440, tiles: [7, 11] },
-				{x:531, y:630 , tiles:[7]}
+				{ x: 531, y: 630, tiles: [7] }
 			]
 		},
 		canvas: {
@@ -201,11 +201,12 @@ var GUI = function () {
 
 			fillField.call(this, fieldLayout);
 		},
-		drawTownAt: function (x, y) {
+		drawTownAt: function (spotIndex) {
+			var coords = CONSTANTS.playerUI.townSpots[spotIndex];
 			var img = new Image();
 			img.src = 'images/redvillage.png';
 			this.context.scale(1.3, 1.3);
-			this.context.drawImage(img, x / 1.3, y / 1.3);
+			this.context.drawImage(img, coords.x / 1.35, coords.y / 1.4);
 			this.context.scale(1 / 1.3, 1 / 1.3);
 		},
 		drawPlayerGUI: function (players, playerTurn) {
@@ -229,8 +230,10 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
+		// this function now returns the index of the coordinates of a town spot or -1
+		// TODO: rename it appropriately
 		clickedInsideTownArea: function (e) {
-			
+
 			function isInside(e, range) {
 				var x = e.x - range.x;
 				var y = e.y - range.y;
@@ -238,16 +241,17 @@ var GUI = function () {
 				console.log(sqrt);
 				return (sqrt < 50);
 			}
-			
-			var result = false;
-			
-			CONSTANTS.playerUI.townSpots.map(function (townSpot){
-				if(isInside({x: e.clientX, y: e.clientY}, townSpot)) {
-					result = true;
+
+			var notInside = -1;
+
+			for (var i = 0, spots = CONSTANTS.playerUI.townSpots, len = spots.length; i < len; i += 1) {
+				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
+					return i;
 				}
-			});
-			
-			return result;
+
+			}
+
+			return notInside;
 		},
 		animateDice: function (dice1, dice2) {
 			// Stefcho gledai tuk!
