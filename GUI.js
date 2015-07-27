@@ -35,7 +35,6 @@ var GUI = function () {
 					rollButton: 'Roll',
 					endTurn: 'End Turn'
 				}
-<<<<<<< HEAD
 			},
 			townSpots: [
 				{ x: 860, y: 56, tiles: [0] },
@@ -56,16 +55,74 @@ var GUI = function () {
 				{ x: 1526, y: 440, tiles: [7, 11] },
 				{ x: 531, y: 630, tiles: [7] }
 			]
-=======
-			}
->>>>>>> dcea876b1d12d8bb719e85e8b470edd517d1f6b6
 		},
 		canvas: {
 			id: 'canvas',
 			context: '2d'
 		}
-	};
 
+	};
+	var fieldIsDrawn = false;
+	var animate = function () {
+		var layer = new Kinetic.Layer(),
+			stage = new Kinetic.Stage({
+				container: 'container',
+				width: 1700,
+				height: 1100
+			});
+		
+		var animateFieldBlock = function animateFiledBlock(imageName, offsetX, offsetY, id) {
+			var img = new Image(),
+				hexagon,
+				period,
+				anim;
+
+			img.src = 'images/' + imageName;
+			hexagon = new Kinetic.RegularPolygon({
+				x: offsetX,
+				y: offsetY,
+				sides: 6,
+				radius: 105,
+				fillPatternImage: img,
+				fillPatternOffset: { x: 110, y: 120 },
+				stroke: 'nome'
+			});
+			period = 6000;
+
+			layer.add(hexagon);
+			stage.add(layer);
+
+			var simpleText = new Kinetic.Text({
+				x: offsetX,
+				y: offsetY,
+				text: id.toString(),
+				fontSize: 60,
+				fontFamily: 'Calibri',
+				fill: 'white'
+			});
+			
+			
+
+			anim = new Kinetic.Animation(function (frame) {
+				var scale = Math.sin(frame.time * 2 * Math.PI / period) + 0.001;
+
+				if (scale > 0.999999999) {
+					anim.stop();
+			layer.add(simpleText);
+					
+				}
+
+				hexagon.scale({ x: scale, y: scale });
+			}, layer);
+			
+			if(!fieldIsDrawn)
+			anim.start();
+			
+		}
+
+		return animateFieldBlock;
+
+	} ();
 
 	function fillField(fieldLayout) {
 
@@ -96,19 +153,23 @@ var GUI = function () {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
 
 
-               var imageName = fieldLayout[i][j].resource + '.png';
+				var imageName = fieldLayout[i][j].resource + '.png';
 
-
-				//self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
-				self.context.fillStyle = 'white';
-				self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
-				self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
+				animate(imageName, rowOffsetX[i] + j * tileMetrics.w, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id);
+				// self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
+				// self.context.fillStyle = 'white';
+				// self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
+				// self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 			}
 		}
+		
+		fieldIsDrawn = true;
 	}
 
 	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
-
+		
+		
+		
 		var resourceHand,
 			handOffset,
 			buttonsOffset,
@@ -243,7 +304,7 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
-<<<<<<< HEAD
+
 		// this function now returns the index of the coordinates of a town spot or -1
 		// TODO: rename it appropriately
 		clickedInsideTownArea: function (e) {
@@ -270,10 +331,6 @@ var GUI = function () {
 		animateDice: function (dice1, dice2) {
 			// Stefcho gledai tuk!
 		}
-=======
-		
-
->>>>>>> dcea876b1d12d8bb719e85e8b470edd517d1f6b6
 	};
 
 
