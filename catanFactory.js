@@ -2,7 +2,7 @@ var catanFactory = function () {
 
 	var CONSTANTS = {
 		defaultField: [
-			[{ id: 11 }, { id: 12 }, { id: 9 }],
+			[{ id: 11 }, { id: 12 }, { id: 10 }],
 			[{ id: 4 }, { id: 6 }, { id: 5 }, { id: 9 }],
 			[{ id: 7, resource: 'none' }, { id: 3 }, { id: 11 }, { id: 4 }, { id: 8 }],
 			[{ id: 8 }, { id: 10 }, { id: 9 }, { id: 3 }],
@@ -64,7 +64,7 @@ var catanFactory = function () {
 
 				resources = terrain.sort(function (x, y) {
 					setTimeout(100);
-					return Math.pow(-1, Math.ceil(Math.random() * 10) % 5);
+					return Math.pow(-1, Math.ceil(Math.random() * 10) % 19);
 				});
 
 				for (i = 0, len1 = self.layout.length; i < len1; i += 1) {
@@ -94,6 +94,8 @@ var catanFactory = function () {
 					self.buildingType = buildingType;
 					self.coordinates = coordinates;
 					self.resourceCost = resourceCost;
+					
+					return this;
 				},
 				coordinates: {
 					x: null,
@@ -122,8 +124,28 @@ var catanFactory = function () {
 
 					return self;
 				},
-				build: function (building, coordinates) {
+				build: function (buildingType, coordinates) {
 					// TODO: implement! lol
+					
+					var cost = CONSTANTS.costs[buildingType];
+					var costKeys = Object.keys(cost);
+
+					for (var i = 0, len = costKeys.length; i < len; i+=1) {
+						// console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
+						if(this.resources[costKeys[i]] < cost[costKeys[i]]) {
+							return false;
+						}
+					}
+					
+					this[buildingType+'s'].push(Object.create(building.init(buildingType, coordinates)));
+					
+					for (i = 0; i < len; i+=1) {
+						this.resources[costKeys[i]] -= cost[costKeys[i]];
+						
+					}
+					
+					return true;
+					
 				}
 			};
 		} ();

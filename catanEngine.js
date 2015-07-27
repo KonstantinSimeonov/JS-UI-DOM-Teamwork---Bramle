@@ -12,8 +12,6 @@ var catanEngine = function () {
 		},
 		run: function () {
 
-
-
 			var playerColors = ['red', 'blue', 'green', 'yellow'];
 
 			var self = this,
@@ -21,12 +19,65 @@ var catanEngine = function () {
 				players = self.factory.getPlayers(),
 				currentPlayerTurn = 1,
 				buildMode = false;
-
-			function controllerIsClicked(e) {
-				console.log(e.clientX, e.clientY);
-				alert(self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY));
-			}
+				
+			function handleBuildReques(player) {
+				
+			}	
 			
+			function controllerIsClicked(e) {
+				
+				
+				
+				var spotIndex = self.gui.clickedInsideTownArea(e);
+				if (spotIndex != -1) {
+					
+					self.gui.drawTownAt(spotIndex);
+				}
+
+
+
+				console.log(e.clientX, e.clientY);
+				// alert('{x:'+e.clientX + ', y:' + e.clientY+' , tiles:[]}');
+				var command = self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY);
+
+				switch (command) {
+					case 'Roll':
+						var dice1 = self.roll(),
+							dice2 = self.roll();
+						var sum = dice1 + dice2;
+
+						if (sum !== 7) {
+							field.layout.map(function (row) {
+								row.map(function (tile) {
+									if (tile.id === sum) {
+										console.log('match da ima ' + tile.id);
+										// TODO: distribute resource here.
+									}
+								});
+							});
+						} else {
+							// TODO: bandits
+						}
+						break;
+					case 'Build':
+						console.log('build requested. feature not implemented yet');
+						players[playerColors[currentPlayerTurn]].resources = {
+							wood: 0,
+							grain: 2,
+							rocks: 3,
+							sheep: 1,
+							clay: 10
+						};
+						console.log(players[playerColors[currentPlayerTurn]].build('town', [0]));
+						break;
+					case 'Trade':
+						console.log('trade requested. feature not implemented yet');
+						break;
+					default:
+						break;
+				}
+			}
+
 			function chooseTowns() {
 				
 				// this functions lets us use encapsulated variables
@@ -37,11 +88,17 @@ var catanEngine = function () {
 				var turns = [1, 2, 3, 4, 4, 3, 2, 1];
 
 				window.onclick = function (e) {
-					self.gui.drawTownAt(e.clientX, e.clientY);
-					// push in players inventory here
+					var spotIndex = self.gui.clickedInsideTownArea(e);
+
+					if (spotIndex !== -1) {
+						self.gui.drawTownAt(spotIndex);
+						// push in players inventory here
 					
-					self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
-					townsToPlace -= 1;
+						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
+
+						townsToPlace -= 1;
+					}
+
 
 					if (townsToPlace === 0) {
 						// set the event function to controllers
@@ -59,28 +116,6 @@ var catanEngine = function () {
 			var diceResult1 = self.roll(),
 				diceResult2 = self.roll();
 			// gui.animateDice();
-// 			
-// 			var canvas = document.getElementById('canvas');
-// 			canvas.onclick = function (e) {
-// 
-// 				if (GUI.buttonCoordinates.isClicked('Trade', currentPlayerTurn, e.clientX - canvas.offsetLeft, e.clientY + canvas.offsetTop)) {
-// 					alert('trade requested');
-// 				}
-// 				
-// 				// if(e.clientX > 770 &&  e.clientX < 870) {
-// 				// 	if(e.clientY > 240 && e.clientY < 330) {
-// 				// 		self.gui.drawTownAt(820, 280);
-// 				// 		console.log(currentPlayerTurn);
-// 				// 		players[playerColors[currentPlayerTurn]].towns.push({a: 0, b: 4, c: 5, settlementType: 'village'});
-// 				// 	}
-// 				// }
-// 				
-// 			}
-
-
-
-
-
 		},
 		roll: function rollDice() {
 			var diceResult = (Math.ceil(Math.random() * 1000) % 6) + 1;
