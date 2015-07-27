@@ -67,23 +67,27 @@ var GUI = function () {
 		var layer = new Kinetic.Layer(),
 			stage = new Kinetic.Stage({
 				container: 'container',
-				width: 1700,
-				height: 1100
+				width: screen.availWidth/1.2,
+				height: screen.availHeight
 			});
-		
+
 		var animateFieldBlock = function animateFiledBlock(imageName, offsetX, offsetY, id) {
 			var img = new Image(),
 				hexagon,
 				period,
 				anim;
 
+			var screenScale = 1275 / screen.availHeight;
+			var widthScale = 2400 / screen.availWidth;
+
 			img.src = 'images/' + imageName;
 			hexagon = new Kinetic.RegularPolygon({
-				x: offsetX,
-				y: offsetY,
+				x: offsetX / widthScale,
+				y: offsetY / screenScale,
 				sides: 6,
-				radius: 105,
+				radius: 105 / (screenScale),
 				fillPatternImage: img,
+
 				fillPatternOffset: { x: 110, y: 120 },
 				stroke: 'nome'
 			});
@@ -93,31 +97,31 @@ var GUI = function () {
 			stage.add(layer);
 
 			var simpleText = new Kinetic.Text({
-				x: offsetX,
-				y: offsetY,
+				x: offsetX / widthScale,
+				y: offsetY / screenScale,
 				text: id.toString(),
 				fontSize: 60,
 				fontFamily: 'Calibri',
 				fill: 'white'
 			});
-			
-			
+
+
 
 			anim = new Kinetic.Animation(function (frame) {
 				var scale = Math.sin(frame.time * 2 * Math.PI / period) + 0.001;
 
 				if (scale > 0.999999999) {
 					anim.stop();
-			layer.add(simpleText);
-					
+					layer.add(simpleText);
+
 				}
 
 				hexagon.scale({ x: scale, y: scale });
 			}, layer);
-			
-			if(!fieldIsDrawn)
-			anim.start();
-			
+
+			if (!fieldIsDrawn)
+				anim.start();
+
 		}
 
 		return animateFieldBlock;
@@ -145,31 +149,31 @@ var GUI = function () {
         console.log(tileMetrics);
 
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
-        console.log(rowOffsetX);
+        // console.log(rowOffsetX);
 		
 		// TODO: implement field animations here
-
+		var startingOffsetX = self.canvas.width;
 		for (i = 0, len1 = fieldLayout.length; i < len1; i += 1) {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
 
 
 				var imageName = fieldLayout[i][j].resource + '.png';
 
-				animate(imageName, rowOffsetX[i] + j * tileMetrics.w, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id);
+				animate(imageName, rowOffsetX[i] + j * tileMetrics.w + startingOffsetX, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id);
 				// self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 				// self.context.fillStyle = 'white';
 				// self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
 				// self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 			}
 		}
-		
+
 		fieldIsDrawn = true;
 	}
 
 	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
-		
-		
-		
+
+
+
 		var resourceHand,
 			handOffset,
 			buttonsOffset,
