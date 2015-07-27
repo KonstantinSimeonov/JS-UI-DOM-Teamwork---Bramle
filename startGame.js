@@ -19,7 +19,7 @@ function startGame() {
 //}
 
 function removeText() {
-    div.parentNode.removeChild(div) ;
+    div.parentNode.removeChild(div);
 }
 
 function showContent() {
@@ -35,10 +35,18 @@ function getBack() {
 function removeBackground() {
     document.getElementById('body').style.background = 'none';
 }
+function start() {
+    var bodyChild = document.body.firstChild;
 
-buttonStart.addEventListener('click', startGame, false);
+    document.body.removeChild(document.getElementById('main'));
+
+    document.getElementById('canvas').style.width = screen.availWidth / 4 + 'px';
+    catanEngine.init(GUI, catanFactory);
+    catanEngine.run();
+}
+//buttonStart.addEventListener('click', startGame, false);
 //buttonStart.addEventListener('click', hideShow, false);
-buttonStart.addEventListener('click', removeText, false);
-buttonStart.addEventListener('click', removeBackground, false);
+// buttonStart.addEventListener('click', removeText, false);
+// buttonStart.addEventListener('click', removeBackground, false);
 buttonTutorial.addEventListener('click', showContent, false);
 buttonBack.addEventListener('click', getBack, false);

@@ -2,10 +2,9 @@ var catanEngine = function () {
 
 	return {
 		init: function (gui, factory) {
-
 			var self = this;
 
-			self.gui = gui;
+			self.gui = GUI.init();
 			self.factory = factory;
 
 			return self;
@@ -19,18 +18,18 @@ var catanEngine = function () {
 				players = self.factory.getPlayers(),
 				currentPlayerTurn = 1,
 				buildMode = false;
-				
+
 			function handleBuildReques(player) {
-				
-			}	
-			
+
+			}
+
 			function controllerIsClicked(e) {
-				
-				
-				
+
+
+
 				var spotIndex = self.gui.clickedInsideTownArea(e);
 				if (spotIndex != -1) {
-					
+
 					self.gui.drawTownAt(spotIndex);
 				}
 
@@ -77,7 +76,10 @@ var catanEngine = function () {
 						break;
 				}
 			}
-
+			
+			self.gui.init().drawField(field.layout);
+			self.gui.drawPlayerGUI(players, currentPlayerTurn);
+			
 			function chooseTowns() {
 				
 				// this functions lets us use encapsulated variables
@@ -95,7 +97,6 @@ var catanEngine = function () {
 						// push in players inventory here
 					
 						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
-
 						townsToPlace -= 1;
 					}
 
@@ -110,8 +111,8 @@ var catanEngine = function () {
 			chooseTowns();
 
 
-			self.gui.init().drawField(field.layout);
-			self.gui.drawPlayerGUI(players, currentPlayerTurn);
+			// self.gui.init().drawField(field.layout);
+			// self.gui.drawPlayerGUI(players, currentPlayerTurn);
 
 			var diceResult1 = self.roll(),
 				diceResult2 = self.roll();
@@ -123,13 +124,5 @@ var catanEngine = function () {
 			return diceResult;
 		}
 	};
-	function attack(result) {
-	if (result < 6)
-		alert('You rolled ' + result + '. You missed your opponent!');
-	else
-		alert('You rolled ' + result + '. You hit your opponent!');
-}
-D6.dice(2, attack);
-
 
 } ();
