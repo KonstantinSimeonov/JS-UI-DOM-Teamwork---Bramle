@@ -35,33 +35,14 @@ var GUI = function () {
 					rollButton: 'Roll',
 					endTurn: 'End Turn'
 				}
-			},
-			townSpots: [
-				{ x: 860, y: 56, tiles: [0] },
-				{ x: 1082, y: 56, tiles: [1] },
-				{ x: 1302, y: 56, tiles: [2] },
-				{ x: 752, y: 119, tiles: [0] },
-				{ x: 971, y: 248, tiles: [0, 1, 5] },
-				{ x: 1193, y: 246, tiles: [1, 4, 5] },
-				{ x: 1412, y: 245, tiles: [2, 6] },
-				{ x: 641, y: 311, tiles: [3] },
-				{ x: 858, y: 309, tiles: [0, 3, 4] },
-				{ x: 1082, y: 311, tiles: [1, 4, 5] },
-				{ x: 1304, y: 311, tiles: [2, 5, 6] },
-				{ x: 639, y: 440, tiles: [3, 7] },
-				{ x: 858, y: 437, tiles: [3, 4, 8] },
-				{ x: 1080, y: 440, tiles: [5, 6, 9] },
-				{ x: 1304, y: 437, tiles: [6, 7, 10] },
-				{ x: 1526, y: 440, tiles: [7, 11] },
-				{ x: 531, y: 630, tiles: [7] }
-			]
+			}
 		},
 		canvas: {
 			id: 'canvas',
 			context: '2d'
 		}
-
 	};
+<<<<<<< HEAD
 	var fieldIsDrawn = false;
 	var animate = function () {
 		var layer = new Kinetic.Layer(),
@@ -127,6 +108,9 @@ var GUI = function () {
 		return animateFieldBlock;
 
 	} ();
+=======
+
+>>>>>>> a538cd42b19ed9b49202b3fbd2805468e5842969
 
 	function fillField(fieldLayout) {
 
@@ -157,8 +141,10 @@ var GUI = function () {
 			for (j = 0, len2 = fieldLayout[i].length; j < len2; j += 1) {
 
 
-				var imageName = fieldLayout[i][j].resource + '.png';
+               var imageName = fieldLayout[i][j].resource + '.png';
 
+
+<<<<<<< HEAD
 				animate(imageName, rowOffsetX[i] + j * tileMetrics.w + startingOffsetX, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id);
 				// self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 				// self.context.fillStyle = 'white';
@@ -168,12 +154,23 @@ var GUI = function () {
 		}
 
 		fieldIsDrawn = true;
+=======
+				//self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
+				self.context.fillStyle = 'white';
+				self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
+				self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
+			}
+		}
+>>>>>>> a538cd42b19ed9b49202b3fbd2805468e5842969
 	}
 
 	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> a538cd42b19ed9b49202b3fbd2805468e5842969
 		var resourceHand,
 			handOffset,
 			buttonsOffset,
@@ -222,7 +219,7 @@ var GUI = function () {
 			},
 			Roll: {
 				x: buttonsOffset.x + 200,
-
+				
 				y: buttonsOffset.y
 			},
 		};
@@ -236,8 +233,8 @@ var GUI = function () {
 			currentOffsetX += 35;
 
 		}
-
-		self.context.scale(1 / scale.x, 1 / scale.y);
+		
+		self.context.scale(1/scale.x, 1/scale.y);
 
 	}
 
@@ -250,26 +247,26 @@ var GUI = function () {
 			self.context = self.canvas.getContext(CONSTANTS.canvas.context);
 
 			// 70 412 
-			// 193 406 
-			// 351 406
+				// 193 406 
+		 		// 351 406
 			
 			self.buttonCoordinates = {
 				isClicked: function (clientX, clientY) {
 					console.log(clientX, clientY);
-					if (clientY > 380 && clientY < 420) {
-
-						if (clientX > 20 && clientX < 115) {
+					if(clientY > 380 && clientY < 420) {
+						
+						if(clientX > 20 && clientX < 115) {
 							return 'Trade';
 						}
-
-						if (clientX > 170 && clientX < 250) {
+						
+						if(clientX > 170 && clientX < 250) {
 							return 'Build';
 						}
-
-						if (clientX > 330 && clientX < 390) {
+						
+						if(clientX > 330 && clientX < 390) {
 							return 'Roll';
 						}
-					}
+					} 
 				}
 			};
 
@@ -279,26 +276,26 @@ var GUI = function () {
 
 			fillField.call(this, fieldLayout);
 		},
-		drawTownAt: function (spotIndex) {
-			var coords = CONSTANTS.playerUI.townSpots[spotIndex];
+		drawTownAt: function (x, y) {
 			var img = new Image();
-			img.src = 'images/redvillage.png';
+			img.src = 'images/village.png';
 			this.context.scale(1.3, 1.3);
-			this.context.drawImage(img, coords.x / 1.35, coords.y / 1.4);
-			this.context.scale(1 / 1.3, 1 / 1.3);
+			this.context.drawImage(img, x/1.3, y/1.3);
+			this.context.scale(1/1.3, 1/1.3);	
 		},
 		drawPlayerGUI: function (players, playerTurn) {
 
 			var playersArray = [players.red, players.blue, players.green, players.yellow],
+				currentPlayerNumber = playerTurn,
 				coords = CONSTANTS.playerUI.circularCoordinates,
 				gui = this;
-
-			for (var i = 0; i < 4; i += 1) {
+			
+			for (var i = 0; i < 4; i+=1) {
 				var scale = i === 0 ? { x: 1.5, y: 1.3 } : { x: 0.5, y: 0.5 };
 				fillPlayerInterface.call(gui, playersArray[playerTurn - 1], coords[i], playerTurn++, scale);
-				playerTurn %= 5;
-				if (playerTurn === 0) {
-					playerTurn += 1;
+				playerTurn%=5;
+				if(playerTurn === 0) {
+					playerTurn+=1;
 				}
 			}
 			
@@ -308,33 +305,8 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
+		
 
-		// this function now returns the index of the coordinates of a town spot or -1
-		// TODO: rename it appropriately
-		clickedInsideTownArea: function (e) {
-
-			function isInside(e, range) {
-				var x = e.x - range.x;
-				var y = e.y - range.y;
-				var sqrt = Math.sqrt(x * x + y * y);
-				console.log(sqrt);
-				return (sqrt < 50);
-			}
-
-			var notInside = -1;
-
-			for (var i = 0, spots = CONSTANTS.playerUI.townSpots, len = spots.length; i < len; i += 1) {
-				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
-					return i;
-				}
-
-			}
-
-			return notInside;
-		},
-		animateDice: function (dice1, dice2) {
-			// Stefcho gledai tuk!
-		}
 	};
 
 
