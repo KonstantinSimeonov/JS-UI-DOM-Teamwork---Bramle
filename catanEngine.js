@@ -19,14 +19,11 @@ var catanEngine = function () {
 				currentPlayerTurn = 1,
 				buildMode = false;
 
-			function handleBuildReques(player) {
+			function handleBuildRequest(player) {
 
 			}
 
 			function controllerIsClicked(e) {
-
-
-
 				var spotIndex = self.gui.clickedInsideTownArea(e);
 				if (spotIndex != -1) {
 
@@ -35,7 +32,7 @@ var catanEngine = function () {
 
 
 
-				console.log(e.clientX, e.clientY);
+				// console.log(e.clientX, e.clientY);
 				// alert('{x:'+e.clientX + ', y:' + e.clientY+' , tiles:[]}');
 				var command = self.gui.buttonCoordinates.isClicked(e.clientX, e.clientY);
 
@@ -49,7 +46,7 @@ var catanEngine = function () {
 							field.layout.map(function (row) {
 								row.map(function (tile) {
 									if (tile.id === sum) {
-										console.log('match da ima ' + tile.id);
+										// console.log('match da ima ' + tile.id);
 										// TODO: distribute resource here.
 									}
 								});
@@ -90,10 +87,10 @@ var catanEngine = function () {
 				var turns = [1, 2, 3, 4, 4, 3, 2, 1];
 
 				window.onclick = function (e) {
-					var spotIndex = self.gui.clickedInsideTownArea(e);
-
+					//var spotIndex = self.gui.clickedInsideTownArea(e);
+					var spotIndex = self.gui.roadSpot(e);
 					if (spotIndex !== -1) {
-						self.gui.drawTownAt(spotIndex);
+						self.gui.drawRoadAt(spotIndex, turns[townsToPlace - 1]);
 						// push in players inventory here
 					
 						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);

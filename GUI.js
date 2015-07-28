@@ -41,26 +41,27 @@ var GUI = function () {
 			id: 'canvas',
 			context: '2d'
 		},
-		townSpots: [
-			{ x: 860, y: 56, tiles: [0] },
-			{ x: 1082, y: 56, tiles: [1] },
-			{ x: 1302, y: 56, tiles: [2] },
-			{ x: 752, y: 119, tiles: [0] },
-			{ x: 971, y: 248, tiles: [0, 1, 5] },
-			{ x: 1193, y: 246, tiles: [1, 4, 5] },
-			{ x: 1412, y: 245, tiles: [2, 6] },
-			{ x: 641, y: 311, tiles: [3] },
-			{ x: 858, y: 309, tiles: [0, 3, 4] },
-			{ x: 1082, y: 311, tiles: [1, 4, 5] },
-			{ x: 1304, y: 311, tiles: [2, 5, 6] },
-			{ x: 639, y: 440, tiles: [3, 7] },
-			{ x: 858, y: 437, tiles: [3, 4, 8] },
-			{ x: 1080, y: 440, tiles: [5, 6, 9] },
-			{ x: 1304, y: 437, tiles: [6, 7, 10] },
-			{ x: 1526, y: 440, tiles: [7, 11] },
-			{ x: 531, y: 630, tiles: [7] }
-		],
-		store: []
+		// townSpots: [
+		// 	{ x: 860, y: 56, tiles: [0] },
+		// 	{ x: 1082, y: 56, tiles: [1] },
+		// 	{ x: 1302, y: 56, tiles: [2] },
+		// 	{ x: 752, y: 119, tiles: [0] },
+		// 	{ x: 971, y: 248, tiles: [0, 1, 5] },
+		// 	{ x: 1193, y: 246, tiles: [1, 4, 5] },
+		// 	{ x: 1412, y: 245, tiles: [2, 6] },
+		// 	{ x: 641, y: 311, tiles: [3] },
+		// 	{ x: 858, y: 309, tiles: [0, 3, 4] },
+		// 	{ x: 1082, y: 311, tiles: [1, 4, 5] },
+		// 	{ x: 1304, y: 311, tiles: [2, 5, 6] },
+		// 	{ x: 639, y: 440, tiles: [3, 7] },
+		// 	{ x: 858, y: 437, tiles: [3, 4, 8] },
+		// 	{ x: 1080, y: 440, tiles: [5, 6, 9] },
+		// 	{ x: 1304, y: 437, tiles: [6, 7, 10] },
+		// 	{ x: 1526, y: 440, tiles: [7, 11] },
+		// 	{ x: 531, y: 630, tiles: [7] }
+		// ],
+		townCoordinates: [],
+		roadCoordinates: []
 	};
 	var layer = new Kinetic.Layer()
 	var stage = new Kinetic.Stage({
@@ -84,21 +85,37 @@ var GUI = function () {
 			var hexRadius = 105 / screenScale,
 				xValue = ((offsetX / widthScale)) | 0,
 				yValue = ((offsetY - 60) / screenScale) | 0;
-			if (kopon) {
+				
+			//if (kopon) {
 
-				var pi = Math.PI / 3;
-				for (var i = 0; i < 6; i += 1) {
-					CONSTANTS.store.push(
-						{
-							x: xValue + (hexRadius + 10) * Math.sin(pi * i) - 22,
-							y: yValue + (hexRadius + 10) * Math.cos(pi * i) + 22
-						}
-						);
-
+			var pi = Math.PI / 3;
+			for (var i = 0; i < 6; i += 1) {
+				var town = {
+					x: xValue + (hexRadius + 10) * Math.sin(pi * i),
+					y: yValue + (hexRadius + 10) * Math.cos(pi * i) + 30
 				}
-
-				kopon = false;
+				var road = {
+					x: xValue + (hexRadius + 5) * Math.cos(pi * i) - 11,
+					y: yValue + (hexRadius + 5) * Math.sin(pi * i) + 11,
+					rotation: i + 1
+				}
+				if (!CONSTANTS.townCoordinates.some(function (point) {
+					return (Math.abs(point.x - town.x) + Math.abs(point.y - town.y)) < 50;
+				})) {
+					CONSTANTS.townCoordinates.push(town);
+				}
+				if(!CONSTANTS.roadCoordinates.some(function (point) {
+					return (Math.abs(point.x - road.x) + Math.abs(point.y - road.y)) < 50;
+				})){
+					CONSTANTS.roadCoordinates.push(
+					road
+					);
+				}
+				
 			}
+
+			//kopon = false;
+			//}
 
 
 			img.src = 'images/' + imageName;
@@ -108,7 +125,6 @@ var GUI = function () {
 				sides: 6,
 				radius: 105 / (screenScale),
 				fillPatternImage: img,
-
 				fillPatternOffset: { x: 110, y: 120 },
 				stroke: 'nome'
 			});
@@ -129,8 +145,6 @@ var GUI = function () {
 				stroke: 'black',
 				strokewidth: 2
 			});
-
-
 
 			anim = new Kinetic.Animation(function (frame) {
 				var scale = Math.sin(frame.time * 2 * Math.PI / period) + 0.001;
@@ -168,10 +182,10 @@ var GUI = function () {
 			images[CONSTANTS.resourceTypes[i]] = new Image();
 			images[CONSTANTS.resourceTypes[i]].src = 'images/' + CONSTANTS.resourceTypes[i] + '.png';
 		}
-        console.log(images);
+        //console.log(images);
 		tileMetrics = { h: 255, w: 221 };
 
-        console.log(tileMetrics);
+        // console.log(tileMetrics);
 
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
         // console.log(rowOffsetX);
@@ -198,21 +212,60 @@ var GUI = function () {
 		// self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
 		// self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 		
-		var gg = new Image();
-		gg.src = 'images/village.png';
+// 		var gg = new Image();
+// 		gg.src = 'images/village.png';
+// 
+// 		CONSTANTS.townCoordinates.map(function (point) {
+// 			var selo = new Kinetic.Image({
+// 				x: point.x,
+// 				y: point.y,
+// 				image: gg,
+// 				width: gg.width,
+// 				height: gg.height
+// 			});
+// 
+// 			layer.add(selo);
+// 			stage.add(layer);
+// 		});
 
-		CONSTANTS.store.map(function (point) {
-			var selo = new Kinetic.Image({
+// 			CONSTANTS.townCoordinates.map(function (point) {
+// 			var selo = new Kinetic.Circle({
+// 				x: point.x,
+// 				y: point.y,
+// 				radius: 20,
+// 				fill: 'white'
+// 			});
+// 
+// 			layer.add(selo);
+// 			stage.add(layer);
+// 		});
+
+		CONSTANTS.roadCoordinates.map(function (point) {
+			var selo = new Kinetic.Rect({
 				x: point.x,
 				y: point.y,
-				image: gg,
-				width: gg.width,
-				height: gg.height
+				height: 40,
+				width: 20,
+				fill: 'white'
 			});
 
 			layer.add(selo);
 			stage.add(layer);
 		});
+	
+	// var road = new Image();
+	// road.src = 'images/road.png';
+	// CONSTANTS.roadCoordinates.map(function (point) {
+	// 				var put = new Kinetic.Image({
+	// 			x: point.x,
+	// 			y: point.y,
+	// 			image: road,
+	// 			width: road.width,
+	// 			height: road.height
+	// 		});
+	// 		layer.add(put);
+	// 		stage.add(layer);
+	// })
 	}
 
 	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
@@ -243,15 +296,20 @@ var GUI = function () {
 		// draw resource hand
 		
 		handOffset = CONSTANTS.playerUI.coordinates.cardsOffset;
-		self.context.drawImage(resourceHand, startingPoint.x + handOffset.x, startingPoint.y + handOffset.y);
+		resourceHand.onload = function () {
+			self.context.scale(scale.x, scale.y);
+			self.context.drawImage(resourceHand, startingPoint.x + handOffset.x, startingPoint.y + handOffset.y)
+			self.context.scale(1 / scale.x, 1 / scale.y);
+		};
+		// self.context.drawImage(resourceHand, startingPoint.x + handOffset.x, startingPoint.y + handOffset.y);
 		// resourceHand.onload = function () {
 		// 	self.context.drawImage(resourceHand, startingPoint.x + handOffset.x, startingPoint.y + handOffset.y);
 		// };
 		buttonsOffset = {
-			x: startingPoint.x + handOffset.x,
-			y: startingPoint.y + handOffset.y + resourceHand.height + 40
+			x: startingPoint.x + handOffset.x + 40,
+			y: startingPoint.y + handOffset.y + 180
 		};
-		console.log(buttonsOffset.y);
+		
 		// draw buttons
 		
 		self.context.fillText(controlNames.tradeButton, buttonsOffset.x, buttonsOffset.y);
@@ -332,17 +390,17 @@ var GUI = function () {
 
 			fillField.call(this, fieldLayout);
 		},
-		drawTownAt: function (spotIndex) {
+		drawTownAt: function (spotIndex, playerNumber) {
 			var img = new Image();
-			img.src = 'images/village.png';
+			img.src = 'images/towns/'+CONSTANTS.playerUI.styles.fontColors[playerNumber - 1]+'village.png';
 			// this.context.scale(1.3, 1.3);
 			// this.context.drawImage(img, x / 1.3, y / 1.3);
 			// this.context.scale(1 / 1.3, 1 / 1.3);
 			
 			img.onload = function () {
 				var selo = new Kinetic.Image({
-					x: CONSTANTS.townSpots[spotIndex].x,
-					y: CONSTANTS.townSpots[spotIndex].y,
+					x: CONSTANTS.townCoordinates[spotIndex].x,
+					y: CONSTANTS.townCoordinates[spotIndex].y,
 					image: img,
 					width: img.width,
 					height: img.height
@@ -354,6 +412,30 @@ var GUI = function () {
 
 			};
 
+		},
+		drawRoadAt: function (spotIndex, playerNumber) {
+			var img = new Image();
+			img.src = 'images/roads/'+CONSTANTS.playerUI.styles.fontColors[playerNumber - 1]+'/'+CONSTANTS.roadCoordinates[spotIndex].rotation+'.png';
+			// this.context.scale(1.3, 1.3);
+			// this.context.drawImage(img, x / 1.3, y / 1.3);
+			// this.context.scale(1 / 1.3, 1 / 1.3);
+			var rotation = CONSTANTS.roadCoordinates[spotIndex].rotation;
+			var offsetFix = ((rotation != 1) && (rotation !=4)) ? 20 : 0;
+			
+			img.onload = function () {
+				var selo = new Kinetic.Image({
+					x: CONSTANTS.roadCoordinates[spotIndex].x + 5 - offsetFix,
+					y: CONSTANTS.roadCoordinates[spotIndex].y,
+					image: img,
+					width: img.width/1.5,
+					height: img.height/2
+				});
+
+				layer.add(selo);
+				stage.add(layer);
+				// console.log(stage);
+
+			};
 		},
 		drawPlayerGUI: function (players, playerTurn) {
 
@@ -383,17 +465,40 @@ var GUI = function () {
 		clickedInsideTownArea: function (e) {
 
 			function isInside(e, range) {
-				var x = e.x - range.x;
-				var y = e.y - range.y;
+				var x = (e.x - 20) - range.x;
+				var y = (e.y - 20) - range.y;
 				var sqrt = Math.sqrt(x * x + y * y);
 				//console.log(sqrt);
-				return (sqrt < 50);
+				
+				return sqrt < 20;
 			}
 
 			var notInside = -1;
 
-			for (var i = 0, spots = CONSTANTS.townSpots, len = spots.length; i < len; i += 1) {
+			for (var i = 0, spots = CONSTANTS.townCoordinates, len = spots.length; i < len; i += 1) {
 				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
+					// console.log('gosho ' + e.clientX +' '+  e.clientY);
+					return i;
+				}
+
+			}
+
+			return notInside;
+		},
+		roadSpot: function (e) {
+
+			function isInside(e, range) {
+				var x = e.x - range.x;
+				var y = e.y - range.y;
+								
+				return (0 <= x && x <= 20) && (0 <= y && y <= 40);
+			}
+
+			var notInside = -1;
+
+			for (var i = 0, spots = CONSTANTS.roadCoordinates, len = spots.length; i < len; i += 1) {
+				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
+					// console.log('gosho ' + e.clientX +' '+  e.clientY);
 					return i;
 				}
 
@@ -401,9 +506,5 @@ var GUI = function () {
 
 			return notInside;
 		}
-
-
 	};
-
-
 } ();
