@@ -32,7 +32,15 @@ var catanEngine = function () {
 			}
 
 			function placeStartingStructures(e){
-				
+				var gui = self.gui,
+					townIndex = gui.indexOfTownCoordinates(e),
+					roadIndex = gui.indexOfRoadCoordinates(e),
+					builtRoad = false,
+					builtTown = false;
+
+				if(townIndex !== -1){
+
+				}
 			}
 
 			function initGame(e){
