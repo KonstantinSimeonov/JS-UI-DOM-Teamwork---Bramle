@@ -243,6 +243,9 @@ var catanFactory = function () {
 					}
 
 					return true;
+				},
+				canBuildVillageAt: function (villageCoordinates) {
+					return canBuiltAt(CONSTANTS.buildingsMap, villageCoordinates);
 				}
 			};
 		} ();
