@@ -213,7 +213,11 @@ var GUI = function () {
 				// self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 			}
 		}
-
+		CONSTANTS.townCoordinates.map(function (x) {
+			while(x.tileAccess.length < 3) {
+				x.tileAccess.push([-1, -1]);
+			}
+		});
 		fieldIsDrawn = true;
 		//self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 		// self.context.fillStyle = 'white';

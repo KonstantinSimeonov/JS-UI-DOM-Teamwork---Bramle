@@ -38,7 +38,7 @@ var catanFactory = function () {
 			var result = '';
 			
 			for (var i = 0; i < 3; i += 1) {
-				// cArr[i] = cArr[i] || [-1, -1];
+				cArr[i] = cArr[i] || [-1, -1];
 				result += cArr[i][0] + 'a' + cArr[i][1];
 
 			}
@@ -52,18 +52,20 @@ var catanFactory = function () {
 			var first = coordinatesArray[0].slice(),
 				second = coordinatesArray[1].slice(),
 				third = coordinatesArray[2].slice();
-			
+				
+			var downField = (first[0] >= 2) ? -1 : 0;
+			var upField = (downField === 0) ? 1 : 0;
 			// magic fest!
 			
 			if (first[0] === second[0]) {
 				console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1]], first, second];
-				neighbors[1] = [first, [first[0] + 1, first[1]], third];
-				neighbors[2] = [second, third, [second[0] + 1, second[0] + 1]];
+				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
+				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
 				console.log('tosho');
-				console.log(coordinatesArray);
-				neighbors[0] = [second, third, [second[0] + 1, second[1]]];
+				console.log(downField);
+				neighbors[0] = [second, third, [third[0] + 1, third[1] + downField]];
 				neighbors[1] = [first, [first[0], first[1] + 1], third];
 				neighbors[2] = [[first[0], first[1] - 1], first, second];
 			}
