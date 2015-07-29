@@ -2,7 +2,9 @@ var buttonStart = document.getElementById('start'),
     buttonTutorial = document.getElementById('tutorial'),
     buttonBack = document.getElementById('back'),
     div = document.getElementById('main'),
-    newDiv = document.createElement('div');
+    newDiv = document.createElement('div'),
+    container = document.getElementsByClassName('toShowOnStart')[0],
+    canvas = document.getElementsByClassName('toShowOnStart')[1];
 
 
 function startGame() {
@@ -36,10 +38,9 @@ function removeBackground() {
     document.getElementById('body').style.background = 'none';
 }
 function start() {
-    var bodyChild = document.body.firstChild;
-
+    canvas.style.display = 'block';
+    container.style.display = 'block';
     document.body.removeChild(document.getElementById('main'));
-
     document.getElementById('canvas').style.width = screen.availWidth / 4 + 'px';
     catanEngine.init(GUI, catanFactory);
     catanEngine.run();
