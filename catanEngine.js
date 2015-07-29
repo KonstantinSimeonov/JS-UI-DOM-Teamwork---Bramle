@@ -1,5 +1,17 @@
 var catanEngine = function () {
 
+	function sortCoordinatesByRowThenByCol(coordinateArray) {
+		var result = coordinateArray;
+		return result.sort(function (x, y) {
+			if (x[0] - y[0] > 0) {
+				return x[0] - y[0];
+			}
+
+			return x[1] - y[1];
+		});
+
+	}
+
 	return {
 		init: function (gui, factory) {
 			var self = this;
@@ -73,10 +85,10 @@ var catanEngine = function () {
 						break;
 				}
 			}
-			
+
 			self.gui.init().drawField(field.layout);
 			self.gui.drawPlayerGUI(players, currentPlayerTurn);
-			
+
 			function chooseTowns() {
 				
 				// this functions lets us use encapsulated variables
@@ -91,9 +103,18 @@ var catanEngine = function () {
 					// var spotIndex = self.gui.roadSpot(e);
 					if (spotIndex !== -1) {
 						// self.gui.drawRoadAt(spotIndex, turns[townsToPlace - 1]);
-						self.gui.drawTownAt(spotIndex, turns[townsToPlace - 1]);
+						var townCoordinates = sortCoordinatesByRowThenByCol(self.gui.getTownCoordinatesAt(spotIndex));
+						// console.log(townCoordinates);
+						// console.log(players[playerColors[turns[townsToPlace - 1]]]);
+						var buildSuccessful = players[playerColors[turns[townsToPlace - 1] - 1]].build('village', townCoordinates);
+
+						if (buildSuccessful) {
+							self.gui.drawTownAt(spotIndex, turns[townsToPlace - 1]);
+						}
+						
 						// push in players inventory here
-					
+						
+						
 						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
 						townsToPlace -= 1;
 					}

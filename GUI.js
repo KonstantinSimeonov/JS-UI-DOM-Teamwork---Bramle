@@ -1,7 +1,7 @@
 var GUI = function () {
 	var CONSTANTS = {
 		fieldStartingPoint: { x: 500, y: 40 },
-		resourceTypes: ['wood', 'sheep', 'grain', 'rocks', 'clay', 'none'],
+		resourceTypes: ['clay', 'wood', 'sheep', 'grain', 'rocks', 'none'],
 		playerUI: {
 			coordinates: {
 				red: { x: 10, y: 20 },
@@ -73,7 +73,7 @@ var GUI = function () {
 		//var kopon = true;
 
 
-		var animateFieldBlock = function animateFiledBlock(imageName, offsetX, offsetY, id) {
+		var animateFieldBlock = function animateFiledBlock(imageName, offsetX, offsetY, id, tile) {
 			var img = new Image(),
 				hexagon,
 				period,
@@ -95,7 +95,7 @@ var GUI = function () {
 				townCoordinateInfo = {
 					x: xValue + (hexRadius + 10) * Math.sin(pi * i),
 					y: yValue + (hexRadius + 10) * Math.cos(pi * i) + 30,
-					tileAccess: [id]
+					tileAccess: [tile]
 				};
 				roadCoordinateInfo = {
 					x: xValue + (hexRadius + 5) * Math.cos(pi * i) - 11,
@@ -109,7 +109,7 @@ var GUI = function () {
 					CONSTANTS.townCoordinates.push(townCoordinateInfo);
 				} else {
 					//console.log()
-					CONSTANTS.townCoordinates[magicNumber].tileAccess.push(id);
+					CONSTANTS.townCoordinates[magicNumber].tileAccess.push(tile);
 				}
 				if (!CONSTANTS.roadCoordinates.some(function (point) {
 					return (Math.abs(point.x - roadCoordinateInfo.x) + Math.abs(point.y - roadCoordinateInfo.y)) < 50;
@@ -206,7 +206,7 @@ var GUI = function () {
 
 				var imageName = fieldLayout[i][j].resource + '.png';
 
-				animate(imageName, rowOffsetX[i] + j * tileMetrics.w + startingOffsetX, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id);
+				animate(imageName, rowOffsetX[i] + j * tileMetrics.w + startingOffsetX, (i + 0.65) * (tileMetrics.h / 1.33333), fieldLayout[i][j].id, [i, j]);
 				// self.context.drawImage(images[fieldLayout[i][j].resource], rowOffsetX[i] + j * tileMetrics.w + 300, (i + 0.25) * (tileMetrics.h / 1.33333));
 				// self.context.fillStyle = 'white';
 				// self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
@@ -404,7 +404,7 @@ var GUI = function () {
 				return;
 			}
 			
-			console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
+			// console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
 			
 			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
 			
@@ -428,7 +428,9 @@ var GUI = function () {
 				// console.log(stage);
 
 			};
-
+		},
+		getTownCoordinatesAt: function (spotIndex) {
+			return CONSTANTS.townCoordinates[spotIndex].tileAccess.slice();
 		},
 		drawRoadAt: function (spotIndex, playerNumber) {
 			

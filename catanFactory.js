@@ -1,5 +1,17 @@
 var catanFactory = function () {
 
+	function sortCoordinatesByRowThenByCol(coordinateArray) {
+		var result = coordinateArray;
+		return result.sort(function (x, y) {
+			if (x[0] - y[0] > 0) {
+				return x[0] - y[0];
+			}
+
+			return x[1] - y[1];
+		});
+
+	}
+
 	var CONSTANTS = {
 		defaultField: [
 			[{ id: 11 }, { id: 12 }, { id: 10 }],
@@ -14,8 +26,80 @@ var catanFactory = function () {
 			town: { grain: 2, rock: 3 },
 			road: { wood: 1, clay: 1 },
 			development: { sheep: 1, grain: 1, rock: 1 }
-		}
+		},
+		buildingsMap: {}
 	};
+
+	function canBuiltAt(buildMap, coordinatesArray) {
+		
+		coordinatesArray = sortCoordinatesByRowThenByCol(coordinatesArray);
+		
+		function coordinateArrayToString(cArr) {
+			var result = '';
+			
+			for (var i = 0; i < 3; i += 1) {
+				// cArr[i] = cArr[i] || [-1, -1];
+				result += cArr[i][0] + 'a' + cArr[i][1];
+
+			}
+			console.log(result);
+			return result;
+		}
+
+		function getNeighbors(coordinatesArray) {
+			var neighbors = [];
+
+			var first = coordinatesArray[0].slice(),
+				second = coordinatesArray[1].slice(),
+				third = coordinatesArray[2].slice();
+			
+			// magic fest!
+			
+			if (first[0] === second[0]) {
+				console.log('gosho');
+				neighbors[0] = [[first[0] - 1, first[1]], first, second];
+				neighbors[1] = [first, [first[0] + 1, first[1]], third];
+				neighbors[2] = [second, third, [second[0] + 1, second[0] + 1]];
+			} else {
+				console.log('tosho');
+				console.log(coordinatesArray);
+				neighbors[0] = [second, third, [second[0] + 1, second[1]]];
+				neighbors[1] = [first, [first[0], first[1] + 1], third];
+				neighbors[2] = [[first[0], first[1] - 1], first, second];
+			}
+
+			return neighbors;
+		}
+		var coordinateHash = coordinateArrayToString(coordinatesArray);
+
+
+		if (buildMap[coordinateHash] !== undefined) {
+			return false;
+		}
+
+
+
+		var neighbors = getNeighbors(coordinatesArray);
+		// console.log(coordinatesArray, neighbors);
+		var canBuild = true;
+
+		neighbors.map(function (neighbor) {
+			
+			// console.log(neighbor);
+			// console.log(buildMap[coordinateArrayToString(neighbor)]);
+			if (buildMap[coordinateArrayToString(neighbor)] !== undefined) {
+				canBuild = false;
+			}
+		});
+
+		console.log(buildMap);
+
+		if (canBuild) {
+			buildMap[coordinateHash] = true;
+		}
+
+		return canBuild;
+	}
 
 	var field = function () {
 
@@ -94,14 +178,9 @@ var catanFactory = function () {
 					self.buildingType = buildingType;
 					self.coordinates = coordinates;
 					self.resourceCost = resourceCost;
-					
+
 					return this;
 				},
-				coordinates: {
-					x: null,
-					y: null,
-					z: null
-				}
 				// TODO: add properties
 			};
 
@@ -111,14 +190,20 @@ var catanFactory = function () {
 					var self = this;
 
 					self.resources = {
-						wood: 0,
-						sheep: 0,
-						grain: 0,
-						clay: 0,
-						rocks: 0,
+						clay: 40,
+						wood: 40,
+						sheep: 40,
+						grain: 40,
+						rocks: 40,
+						// clay: 0,
+						// wood: 0,
+						// sheep: 0,
+						// grain: 0,
+						// rocks: 0,
 					};
 					self.towns = [];
 					self.roads = [];
+					self.villages = self.towns;
 					self.developments = [];
 					self.points = 0
 
@@ -127,23 +212,30 @@ var catanFactory = function () {
 				build: function (buildingType, coordinates) {
 					// TODO: implement! lol
 					
+					if (buildingType === 'town' || buildingType === 'village') {
+						this.points += 1;
+					}
+
 					var cost = CONSTANTS.costs[buildingType];
 					var costKeys = Object.keys(cost);
 
-					for (var i = 0, len = costKeys.length; i < len; i+=1) {
+					for (var i = 0, len = costKeys.length; i < len; i += 1) {
 						// console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
-						if(this.resources[costKeys[i]] < cost[costKeys[i]]) {
+						if (this.resources[costKeys[i]] < cost[costKeys[i]]) {
 							return false;
 						}
 					}
-					
-					this[buildingType+'s'].push(Object.create(building.init(buildingType, coordinates)));
-					
-					for (i = 0; i < len; i+=1) {
-						this.resources[costKeys[i]] -= cost[costKeys[i]];
-						
+					if (!canBuiltAt(CONSTANTS.buildingsMap, coordinates)) {
+						return false;
 					}
+					this[buildingType + 's'].push(Object.create(building.init(buildingType, coordinates)));
+					// CONSTANTS.buildStructuresCoordinates.push(coordinates);
 					
+					for (i = 0; i < len; i += 1) {
+						this.resources[costKeys[i]] -= cost[costKeys[i]];
+
+					}
+
 					return true;
 				}
 			};
