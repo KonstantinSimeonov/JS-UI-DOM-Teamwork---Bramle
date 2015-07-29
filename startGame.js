@@ -4,7 +4,8 @@ var buttonStart = document.getElementById('start'),
     div = document.getElementById('main'),
     newDiv = document.createElement('div'),
     container = document.getElementsByClassName('toShowOnStart')[0],
-    canvas = document.getElementsByClassName('toShowOnStart')[1];
+    canvas = document.getElementsByClassName('toShowOnStart')[1],
+    dice = document.getElementById('diceall');
 
 
 function startGame() {
@@ -38,6 +39,7 @@ function removeBackground() {
     document.getElementById('body').style.background = 'none';
 }
 function start() {
+    dice.style.display = 'block';
     canvas.style.display = 'block';
     container.style.display = 'block';
     document.body.removeChild(document.getElementById('main'));
