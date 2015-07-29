@@ -46,7 +46,7 @@ var catanFactory = function () {
 
 
 			}
-			console.log(result);
+			// console.log(result);
 			return result;
 		}
 
@@ -62,13 +62,13 @@ var catanFactory = function () {
 			// magic fest!
 			
 			if (first[0] === second[0]) {
-				console.log('gosho');
+				// console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
 				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
 				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
-				console.log('tosho');
-				console.log(downField);
+				// console.log('tosho');
+				// console.log(downField);
 				neighbors[0] = [second, third, [third[0] + 1, third[1] + downField]];
 				neighbors[1] = [first, [first[0], first[1] + 1], third];
 				neighbors[2] = [[first[0], first[1] - 1], first, second];
@@ -86,19 +86,19 @@ var catanFactory = function () {
 
 
 		var neighbors = getNeighbors(coordinatesArray);
-		// console.log(coordinatesArray, neighbors);
+		// // console.log(coordinatesArray, neighbors);
 		var canBuild = true;
 
 		neighbors.map(function (neighbor) {
 			
-			// console.log(neighbor);
-			// console.log(buildMap[coordinateArrayToString(neighbor)]);
+			// // console.log(neighbor);
+			// // console.log(buildMap[coordinateArrayToString(neighbor)]);
 			if (buildMap[coordinateArrayToString(neighbor)] !== undefined) {
 				canBuild = false;
 			}
 		});
 
-		console.log(buildMap);
+		// console.log(buildMap);
 
 		if (canBuild) {
 			buildMap[coordinateHash] = true;
@@ -226,7 +226,7 @@ var catanFactory = function () {
 					var costKeys = Object.keys(cost);
 
 					for (var i = 0, len = costKeys.length; i < len; i += 1) {
-						// console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
+						// // console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
 						if (this.resources[costKeys[i]] < cost[costKeys[i]]) {
 							return false;
 						}

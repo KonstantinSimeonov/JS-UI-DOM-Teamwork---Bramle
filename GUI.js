@@ -103,12 +103,12 @@ var GUI = function () {
 					rotation: i + 1
 				};
 				if (!CONSTANTS.townCoordinates.some(function (point) {
-					magicNumber+=1;
+					magicNumber += 1;
 					return (Math.abs(point.x - townCoordinateInfo.x) + Math.abs(point.y - townCoordinateInfo.y)) < 50;
 				})) {
 					CONSTANTS.townCoordinates.push(townCoordinateInfo);
 				} else {
-					//console.log()
+					//// console.log()
 					CONSTANTS.townCoordinates[magicNumber].tileAccess.push(tile);
 				}
 				if (!CONSTANTS.roadCoordinates.some(function (point) {
@@ -190,13 +190,13 @@ var GUI = function () {
 			images[CONSTANTS.resourceTypes[i]] = new Image();
 			images[CONSTANTS.resourceTypes[i]].src = 'images/' + CONSTANTS.resourceTypes[i] + '.png';
 		}
-        //console.log(images);
+        //// console.log(images);
 		tileMetrics = { h: 255, w: 221 };
 
-        // console.log(tileMetrics);
+        // // console.log(tileMetrics);
 
 		rowOffsetX = [tileMetrics.w * 2, tileMetrics.w * 1.5, tileMetrics.w * 1, tileMetrics.w * 1.5, tileMetrics.w * 2];
-        // console.log(rowOffsetX);
+        // // console.log(rowOffsetX);
 		
 		// TODO: implement field animations here
 		var startingOffsetX = self.canvas.width;
@@ -214,7 +214,7 @@ var GUI = function () {
 			}
 		}
 		CONSTANTS.townCoordinates.map(function (x) {
-			while(x.tileAccess.length < 3) {
+			while (x.tileAccess.length < 3) {
 				x.tileAccess.push([-1, -1]);
 			}
 		});
@@ -252,18 +252,18 @@ var GUI = function () {
 		// 			stage.add(layer);
 		// 		});
 
-// 		CONSTANTS.roadCoordinates.map(function (point) {
-// 			var selo = new Kinetic.Rect({
-// 				x: point.x,
-// 				y: point.y,
-// 				height: 40,
-// 				width: 20,
-// 				fill: 'white'
-// 			});
-// 
-// 			layer.add(selo);
-// 			stage.add(layer);
-// 		});
+		// 		CONSTANTS.roadCoordinates.map(function (point) {
+		// 			var selo = new Kinetic.Rect({
+		// 				x: point.x,
+		// 				y: point.y,
+		// 				height: 40,
+		// 				width: 20,
+		// 				fill: 'white'
+		// 			});
+		// 
+		// 			layer.add(selo);
+		// 			stage.add(layer);
+		// 		});
 	
 		// var road = new Image();
 		// road.src = 'images/road.png';
@@ -299,8 +299,8 @@ var GUI = function () {
 		self.context.font = styles.fontStyles.playerName;
 		self.context.fillStyle = styles.fontColors[playerNumber - 1];
 		self.context.strokeStyle = 'black';
-		self.context.fillText('Player ' + playerNumber, startingPoint.x, startingPoint.y + 10);
-		self.context.strokeText('Player ' + playerNumber, startingPoint.x, startingPoint.y + 10);
+		self.context.fillText('Player ' + (playerNumber), startingPoint.x, startingPoint.y + 10);
+		self.context.strokeText('Player ' + (playerNumber), startingPoint.x, startingPoint.y + 10);
 
 		resourceHand = new Image();
 		resourceHand.src = CONSTANTS.playerUI.imagePaths.resourceHand;
@@ -371,14 +371,14 @@ var GUI = function () {
 
 			self.canvas = document.getElementById(CONSTANTS.canvas.id);
 			self.context = self.canvas.getContext(CONSTANTS.canvas.context);
-			// console.log(self.context.clearRect);
+			// // console.log(self.context.clearRect);
 			// 70 412 
 			// 193 406 
 			// 351 406
 			
 			self.buttonCoordinates = {
 				isClicked: function (clientX, clientY) {
-					// console.log(clientX, clientY);
+					// // console.log(clientX, clientY);
 					if (clientY > 380 && clientY < 420) {
 
 						if (clientX > 20 && clientX < 115) {
@@ -403,15 +403,15 @@ var GUI = function () {
 			fillField.call(this, fieldLayout);
 		},
 		drawTownAt: function (spotIndex, playerNumber) {
-			
-			if(CONSTANTS.townCoordinates[spotIndex].buildOn) {
+
+			if (CONSTANTS.townCoordinates[spotIndex].buildOn) {
 				return;
 			}
 			
-			// console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
+			// // console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
 			
 			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
-			
+			console.log(playerNumber);
 			var img = new Image();
 			img.src = 'images/towns/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + 'village.png';
 			// this.context.scale(1.3, 1.3);
@@ -420,8 +420,8 @@ var GUI = function () {
 			
 			img.onload = function () {
 				var selo = new Kinetic.Image({
-					x: CONSTANTS.townCoordinates[spotIndex].x - img.width/2,
-					y: CONSTANTS.townCoordinates[spotIndex].y - img.height/2,
+					x: CONSTANTS.townCoordinates[spotIndex].x - img.width / 2,
+					y: CONSTANTS.townCoordinates[spotIndex].y - img.height / 2,
 					image: img,
 					width: img.width,
 					height: img.height
@@ -429,7 +429,7 @@ var GUI = function () {
 
 				layer.add(selo);
 				stage.add(layer);
-				// console.log(stage);
+				// // console.log(stage);
 
 			};
 		},
@@ -438,10 +438,10 @@ var GUI = function () {
 		},
 		drawRoadAt: function (spotIndex, playerNumber) {
 			
-			if(CONSTANTS.roadCoordinates[spotIndex].builtOn) {
-				return;	
+			if (CONSTANTS.roadCoordinates[spotIndex].builtOn) {
+				return;
 			}
-			
+
 			var img = new Image();
 			img.src = 'images/roads/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + '/' + CONSTANTS.roadCoordinates[spotIndex].rotation + '.png';
 			// this.context.scale(1.3, 1.3);
@@ -449,9 +449,9 @@ var GUI = function () {
 			// this.context.scale(1 / 1.3, 1 / 1.3);
 			var rotation = CONSTANTS.roadCoordinates[spotIndex].rotation;
 			var offsetFix = ((rotation != 1) && (rotation != 4)) ? 30 : 0;
-			
+
 			CONSTANTS.roadCoordinates[spotIndex].builtOn = true;
-			
+
 			img.onload = function () {
 				var selo = new Kinetic.Image({
 					x: CONSTANTS.roadCoordinates[spotIndex].x - offsetFix,
@@ -463,7 +463,7 @@ var GUI = function () {
 
 				layer.add(selo);
 				stage.add(layer);
-				// console.log(stage);
+				// // console.log(stage);
 
 			};
 		},
@@ -475,15 +475,18 @@ var GUI = function () {
 				currentPlayerNumber = playerTurn,
 				coords = CONSTANTS.playerUI.circularCoordinates,
 				gui = this;
-
 			gui.context.clearRect(0, 0, gui.canvas.width, gui.canvas.height);
+			
+			
 			for (var i = 0; i < 4; i += 1) {
 				var scale = i === 0 ? { x: 1.5, y: 1.3 } : { x: 0.5, y: 0.5 };
-				fillPlayerInterface.call(gui, playersArray[playerTurn - 1], coords[i], playerTurn++, scale);
+				fillPlayerInterface.call(gui, playersArray[playerTurn - 1], coords[i], playerTurn, scale);
+				playerTurn+=1;
 				playerTurn %= 5;
 				if (playerTurn === 0) {
 					playerTurn += 1;
 				}
+				// console.log(playerTurn);
 			}
 			
 			// playersArray.map(function (player) {
@@ -498,7 +501,7 @@ var GUI = function () {
 				var x = (e.x) - range.x;
 				var y = (e.y) - range.y;
 				var sqrt = Math.sqrt(x * x + y * y);
-				//console.log(sqrt);
+				//// console.log(sqrt);
 				
 				return sqrt < 20;
 			}
@@ -507,7 +510,7 @@ var GUI = function () {
 
 			for (var i = 0, spots = CONSTANTS.townCoordinates, len = spots.length; i < len; i += 1) {
 				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
-					// console.log('gosho ' + e.clientX +' '+  e.clientY);
+					// // console.log('gosho ' + e.clientX +' '+  e.clientY);
 					return i;
 				}
 
@@ -528,7 +531,7 @@ var GUI = function () {
 
 			for (var i = 0, spots = CONSTANTS.roadCoordinates, len = spots.length; i < len; i += 1) {
 				if (isInside({ x: e.clientX, y: e.clientY }, spots[i])) {
-					// console.log('gosho ' + e.clientX +' '+  e.clientY);
+					// // console.log('gosho ' + e.clientX +' '+  e.clientY);
 					return i;
 				}
 
