@@ -31,19 +31,19 @@ var catanFactory = function () {
 	};
 
 	function canBuiltAt(buildMap, coordinatesArray) {
-		
+
 		coordinatesArray = sortCoordinatesByRowThenByCol(coordinatesArray);
-		
+
 		function coordinateArrayToString(cArr) {
 			var result = '';
-			
+
 			for (var i = 0; i < 3; i += 1) {
-				if(cArr[i]) {
+				if (cArr[i]) {
 					result += cArr[i][0] + 'a' + cArr[i][1];
 				} else {
-					result+= '-1a-1';
+					result += '-1a-1';
 				}
-				
+
 
 			}
 			console.log(result);
@@ -56,7 +56,7 @@ var catanFactory = function () {
 			var first = coordinatesArray[0].slice(),
 				second = coordinatesArray[1].slice(),
 				third = coordinatesArray[2].slice();
-				
+
 			var downField = (first[0] >= 2) ? -1 : 0;
 			var upField = (downField === 0) ? 1 : 0;
 			// magic fest!
@@ -218,8 +218,8 @@ var catanFactory = function () {
 				build: function (buildingType, coordinates) {
 					// TODO: implement! lol
 					
-					if (buildingType === 'town' || buildingType === 'village') {
-						this.points += 1;
+					if(coordinates === undefined) {
+						return;
 					}
 
 					var cost = CONSTANTS.costs[buildingType];
@@ -234,6 +234,11 @@ var catanFactory = function () {
 					if (!canBuiltAt(CONSTANTS.buildingsMap, coordinates)) {
 						return false;
 					}
+
+					if (buildingType === 'town' || buildingType === 'village') {
+						this.points += 1;
+					}
+
 					this[buildingType + 's'].push(Object.create(building.init(buildingType, coordinates)));
 					// CONSTANTS.buildStructuresCoordinates.push(coordinates);
 					
