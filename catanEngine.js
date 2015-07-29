@@ -33,18 +33,45 @@ var catanEngine = function () {
 
 			function placeStartingStructures(e){
 				var gui = self.gui,
+					turns = CONSTANTS.startingPlacementTurn,
+					townsToPlace = CONSTANTS.startingStructures,
 					townIndex = gui.indexOfTownCoordinates(e),
 					roadIndex = gui.indexOfRoadCoordinates(e),
+					currentPlayer = players[turns[townsToPlace-1]-1],
 					builtRoad = false,
-					builtTown = false;
+					builtTown = false,
+					townCoordinates,
+					roadCoordinates;
+
 
 				if(townIndex !== -1){
+					townCoordinates = gui.getTownCoordinatesAt(townIndex);
+					if(currentPlayer.canBuildVillageAt(townCoordinates)){
+						currentPlayer.build('village', townCoordinates);
+						gui.drawTownAt(townIndex,turns[townsToPlace-1]-1);
+						builtTown = true;
+					}
+				}
+				if(roadIndex !==-1){
+					currentPlayer.build('road', roadCoordinates);
+					gui.drawRoadAt(roadIndex, turns[townsToPlace-1]-1);
+				}
 
+				gui.drawPlayerGUI(self.factory.getPlayers(4), turns[townsToPlace-1]-1);
+
+				if(builtTown && builtRoad){
+					CONSTANTS.startingStructures -=1;
+					if(CONSTANTS.startingStructures === 0){
+						window.onclick = function (e){
+							alert('done!');
+						}
+					}
 				}
 			}
 
-			function initGame(e){
+			function initGame(){
 				printMessage('Every player should choose a town and road');
+				window.onclick = placeStartingStructures;
 
 			}
 
@@ -56,9 +83,13 @@ var catanEngine = function () {
 				currentPlayerTurn = 1,
 				buildMode = false;
 
-			self.gui.drawPlayerGUI(players, currentPlayerTurn);
+			players = [players.red, players.blue, players.green, players.yellow];
+
+
+			self.gui.drawPlayerGUI(self.factory.getPlayers(4), currentPlayerTurn);
 			self.gui.drawField(field.layout);
 
+			initGame();
 			//function handleBuildRequest(player) {
             //
 			//}
