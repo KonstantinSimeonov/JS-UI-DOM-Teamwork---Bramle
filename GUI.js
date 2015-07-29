@@ -492,7 +492,7 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
-		townSpot: function (e) {
+		indexOfTownCoordinates: function (e) {
 
 			function isInside(e, range) {
 				var x = (e.x) - range.x;
@@ -515,7 +515,7 @@ var GUI = function () {
 
 			return notInside;
 		},
-		roadSpot: function (e) {
+		indexOfRoadCoordinates: function (e) {
 
 			function isInside(e, range) {
 				var x = e.x - range.x;
