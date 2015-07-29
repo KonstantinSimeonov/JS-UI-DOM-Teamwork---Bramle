@@ -1,5 +1,4 @@
 var GUI = function () {
-
 	var CONSTANTS = {
 		fieldStartingPoint: { x: 500, y: 40 },
 		resourceTypes: ['wood', 'sheep', 'grain', 'rocks', 'clay', 'none'],
@@ -71,7 +70,7 @@ var GUI = function () {
 	});
 	var fieldIsDrawn = false;
 	var animate = function () {
-		var kopon = true;
+		//var kopon = true;
 
 
 		var animateFieldBlock = function animateFiledBlock(imageName, offsetX, offsetY, id) {
@@ -104,14 +103,14 @@ var GUI = function () {
 				})) {
 					CONSTANTS.townCoordinates.push(town);
 				}
-				if(!CONSTANTS.roadCoordinates.some(function (point) {
+				if (!CONSTANTS.roadCoordinates.some(function (point) {
 					return (Math.abs(point.x - road.x) + Math.abs(point.y - road.y)) < 50;
-				})){
+				})) {
 					CONSTANTS.roadCoordinates.push(
-					road
-					);
+						road
+						);
 				}
-				
+
 			}
 
 			//kopon = false;
@@ -212,60 +211,60 @@ var GUI = function () {
 		// self.context.font = CONSTANTS.playerUI.styles.fontStyles.tileNumber;
 		// self.context.fillText(fieldLayout[i][j].id.toString(), 300 + rowOffsetX[i] + j * tileMetrics.w + tileMetrics.w / 2.5, (i + 0.25) * (tileMetrics.h / 1.33333) + tileMetrics.h / 1.75);
 		
-// 		var gg = new Image();
-// 		gg.src = 'images/village.png';
-// 
-// 		CONSTANTS.townCoordinates.map(function (point) {
-// 			var selo = new Kinetic.Image({
-// 				x: point.x,
-// 				y: point.y,
-// 				image: gg,
-// 				width: gg.width,
-// 				height: gg.height
-// 			});
-// 
-// 			layer.add(selo);
-// 			stage.add(layer);
-// 		});
+		// 		var gg = new Image();
+		// 		gg.src = 'images/village.png';
+		// 
+		// 		CONSTANTS.townCoordinates.map(function (point) {
+		// 			var selo = new Kinetic.Image({
+		// 				x: point.x,
+		// 				y: point.y,
+		// 				image: gg,
+		// 				width: gg.width,
+		// 				height: gg.height
+		// 			});
+		// 
+		// 			layer.add(selo);
+		// 			stage.add(layer);
+		// 		});
 
-// 			CONSTANTS.townCoordinates.map(function (point) {
-// 			var selo = new Kinetic.Circle({
+		// 			CONSTANTS.townCoordinates.map(function (point) {
+		// 			var selo = new Kinetic.Circle({
+		// 				x: point.x,
+		// 				y: point.y,
+		// 				radius: 20,
+		// 				fill: 'white'
+		// 			});
+		// 
+		// 			layer.add(selo);
+		// 			stage.add(layer);
+		// 		});
+
+// 		CONSTANTS.roadCoordinates.map(function (point) {
+// 			var selo = new Kinetic.Rect({
 // 				x: point.x,
 // 				y: point.y,
-// 				radius: 20,
+// 				height: 40,
+// 				width: 20,
 // 				fill: 'white'
 // 			});
 // 
 // 			layer.add(selo);
 // 			stage.add(layer);
 // 		});
-
-		CONSTANTS.roadCoordinates.map(function (point) {
-			var selo = new Kinetic.Rect({
-				x: point.x,
-				y: point.y,
-				height: 40,
-				width: 20,
-				fill: 'white'
-			});
-
-			layer.add(selo);
-			stage.add(layer);
-		});
 	
-	// var road = new Image();
-	// road.src = 'images/road.png';
-	// CONSTANTS.roadCoordinates.map(function (point) {
-	// 				var put = new Kinetic.Image({
-	// 			x: point.x,
-	// 			y: point.y,
-	// 			image: road,
-	// 			width: road.width,
-	// 			height: road.height
-	// 		});
-	// 		layer.add(put);
-	// 		stage.add(layer);
-	// })
+		// var road = new Image();
+		// road.src = 'images/road.png';
+		// CONSTANTS.roadCoordinates.map(function (point) {
+		// 				var put = new Kinetic.Image({
+		// 			x: point.x,
+		// 			y: point.y,
+		// 			image: road,
+		// 			width: road.width,
+		// 			height: road.height
+		// 		});
+		// 		layer.add(put);
+		// 		stage.add(layer);
+		// })
 	}
 
 	function fillPlayerInterface(player, startingPoint, playerNumber, scale) {
@@ -391,16 +390,23 @@ var GUI = function () {
 			fillField.call(this, fieldLayout);
 		},
 		drawTownAt: function (spotIndex, playerNumber) {
+			
+			if(CONSTANTS.townCoordinates[spotIndex].buildOn) {
+				return;
+			}
+			
+			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
+			
 			var img = new Image();
-			img.src = 'images/towns/'+CONSTANTS.playerUI.styles.fontColors[playerNumber - 1]+'village.png';
+			img.src = 'images/towns/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + 'village.png';
 			// this.context.scale(1.3, 1.3);
 			// this.context.drawImage(img, x / 1.3, y / 1.3);
 			// this.context.scale(1 / 1.3, 1 / 1.3);
 			
 			img.onload = function () {
 				var selo = new Kinetic.Image({
-					x: CONSTANTS.townCoordinates[spotIndex].x,
-					y: CONSTANTS.townCoordinates[spotIndex].y,
+					x: CONSTANTS.townCoordinates[spotIndex].x - img.width/2,
+					y: CONSTANTS.townCoordinates[spotIndex].y - img.height/2,
 					image: img,
 					width: img.width,
 					height: img.height
@@ -414,21 +420,28 @@ var GUI = function () {
 
 		},
 		drawRoadAt: function (spotIndex, playerNumber) {
+			
+			if(CONSTANTS.roadCoordinates[spotIndex].builtOn) {
+				return;	
+			}
+			
 			var img = new Image();
-			img.src = 'images/roads/'+CONSTANTS.playerUI.styles.fontColors[playerNumber - 1]+'/'+CONSTANTS.roadCoordinates[spotIndex].rotation+'.png';
+			img.src = 'images/roads/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + '/' + CONSTANTS.roadCoordinates[spotIndex].rotation + '.png';
 			// this.context.scale(1.3, 1.3);
 			// this.context.drawImage(img, x / 1.3, y / 1.3);
 			// this.context.scale(1 / 1.3, 1 / 1.3);
 			var rotation = CONSTANTS.roadCoordinates[spotIndex].rotation;
-			var offsetFix = ((rotation != 1) && (rotation !=4)) ? 20 : 0;
+			var offsetFix = ((rotation != 1) && (rotation != 4)) ? 30 : 0;
+			
+			CONSTANTS.roadCoordinates[spotIndex].builtOn = true;
 			
 			img.onload = function () {
 				var selo = new Kinetic.Image({
-					x: CONSTANTS.roadCoordinates[spotIndex].x + 5 - offsetFix,
+					x: CONSTANTS.roadCoordinates[spotIndex].x - offsetFix,
 					y: CONSTANTS.roadCoordinates[spotIndex].y,
 					image: img,
-					width: img.width/1.5,
-					height: img.height/2
+					width: img.width / 1.5,
+					height: img.height / 2
 				});
 
 				layer.add(selo);
@@ -462,11 +475,11 @@ var GUI = function () {
 			// 	currentPlayerNumber%=5;
 			// });
 		},
-		clickedInsideTownArea: function (e) {
+		townSpot: function (e) {
 
 			function isInside(e, range) {
-				var x = (e.x - 20) - range.x;
-				var y = (e.y - 20) - range.y;
+				var x = (e.x) - range.x;
+				var y = (e.y) - range.y;
 				var sqrt = Math.sqrt(x * x + y * y);
 				//console.log(sqrt);
 				
@@ -490,7 +503,7 @@ var GUI = function () {
 			function isInside(e, range) {
 				var x = e.x - range.x;
 				var y = e.y - range.y;
-								
+
 				return (0 <= x && x <= 20) && (0 <= y && y <= 40);
 			}
 

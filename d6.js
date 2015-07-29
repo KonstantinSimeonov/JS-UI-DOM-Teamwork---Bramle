@@ -475,7 +475,7 @@ D6.roll = function() {
 	D6AnimBuilder.get("dice").start();
 }
 
-D6.baseUrl = "";
+D6.baseUrl = "images/dices/";
 
 D6.setBaseUrl = function(baseUrl) {
 	D6.baseUrl = baseUrl;

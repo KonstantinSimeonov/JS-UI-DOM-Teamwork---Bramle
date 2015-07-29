@@ -145,7 +145,6 @@ var catanFactory = function () {
 					}
 					
 					return true;
-					
 				}
 			};
 		} ();

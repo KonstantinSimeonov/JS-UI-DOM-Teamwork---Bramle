@@ -87,10 +87,11 @@ var catanEngine = function () {
 				var turns = [1, 2, 3, 4, 4, 3, 2, 1];
 
 				window.onclick = function (e) {
-					//var spotIndex = self.gui.clickedInsideTownArea(e);
-					var spotIndex = self.gui.roadSpot(e);
+					var spotIndex = self.gui.townSpot(e);
+					// var spotIndex = self.gui.roadSpot(e);
 					if (spotIndex !== -1) {
-						self.gui.drawRoadAt(spotIndex, turns[townsToPlace - 1]);
+						// self.gui.drawRoadAt(spotIndex, turns[townsToPlace - 1]);
+						self.gui.drawTownAt(spotIndex, turns[townsToPlace - 1]);
 						// push in players inventory here
 					
 						self.gui.drawPlayerGUI(players, turns[townsToPlace - 1]);
