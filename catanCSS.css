@@ -68,6 +68,10 @@ h2 {
     display: none;
 }
 
+.button:focus{
+    outline:0;
+}
+
 #main {
     text-align: center;
 
