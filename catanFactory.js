@@ -38,8 +38,12 @@ var catanFactory = function () {
 			var result = '';
 			
 			for (var i = 0; i < 3; i += 1) {
-				cArr[i] = cArr[i] || [-1, -1];
-				result += cArr[i][0] + 'a' + cArr[i][1];
+				if(cArr[i]) {
+					result += cArr[i][0] + 'a' + cArr[i][1];
+				} else {
+					result+= '-1a-1';
+				}
+				
 
 			}
 			console.log(result);
@@ -59,7 +63,7 @@ var catanFactory = function () {
 			
 			if (first[0] === second[0]) {
 				console.log('gosho');
-				neighbors[0] = [[first[0] - 1, first[1]], first, second];
+				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
 				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
 				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
