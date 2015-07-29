@@ -77,7 +77,10 @@ var GUI = function () {
 			var img = new Image(),
 				hexagon,
 				period,
-				anim;
+				anim,
+				townCoordinateInfo,
+				roadCoordinateInfo,
+				magicNumber = -1;
 
 			var screenScale = 1275 / screen.availHeight;
 			var widthScale = 2400 / screen.availWidth;
@@ -89,27 +92,33 @@ var GUI = function () {
 
 			var pi = Math.PI / 3;
 			for (var i = 0; i < 6; i += 1) {
-				var town = {
+				townCoordinateInfo = {
 					x: xValue + (hexRadius + 10) * Math.sin(pi * i),
-					y: yValue + (hexRadius + 10) * Math.cos(pi * i) + 30
-				}
-				var road = {
+					y: yValue + (hexRadius + 10) * Math.cos(pi * i) + 30,
+					tileAccess: [id]
+				};
+				roadCoordinateInfo = {
 					x: xValue + (hexRadius + 5) * Math.cos(pi * i) - 11,
 					y: yValue + (hexRadius + 5) * Math.sin(pi * i) + 11,
 					rotation: i + 1
-				}
+				};
 				if (!CONSTANTS.townCoordinates.some(function (point) {
-					return (Math.abs(point.x - town.x) + Math.abs(point.y - town.y)) < 50;
+					magicNumber+=1;
+					return (Math.abs(point.x - townCoordinateInfo.x) + Math.abs(point.y - townCoordinateInfo.y)) < 50;
 				})) {
-					CONSTANTS.townCoordinates.push(town);
+					CONSTANTS.townCoordinates.push(townCoordinateInfo);
+				} else {
+					//console.log()
+					CONSTANTS.townCoordinates[magicNumber].tileAccess.push(id);
 				}
 				if (!CONSTANTS.roadCoordinates.some(function (point) {
-					return (Math.abs(point.x - road.x) + Math.abs(point.y - road.y)) < 50;
+					return (Math.abs(point.x - roadCoordinateInfo.x) + Math.abs(point.y - roadCoordinateInfo.y)) < 50;
 				})) {
 					CONSTANTS.roadCoordinates.push(
-						road
+						roadCoordinateInfo
 						);
 				}
+				magicNumber = -1;
 
 			}
 
@@ -394,6 +403,8 @@ var GUI = function () {
 			if(CONSTANTS.townCoordinates[spotIndex].buildOn) {
 				return;
 			}
+			
+			console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
 			
 			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
 			
