@@ -411,7 +411,7 @@ var GUI = function () {
 			// // console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
 			
 			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
-			console.log(playerNumber);
+			// console.log(playerNumber);
 			var img = new Image();
 			img.src = 'images/towns/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + 'village.png';
 			// this.context.scale(1.3, 1.3);

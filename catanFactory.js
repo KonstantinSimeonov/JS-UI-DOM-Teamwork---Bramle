@@ -46,7 +46,7 @@ var catanFactory = function () {
 
 
 			}
-			// console.log(result);
+			console.log(result);
 			return result;
 		}
 
@@ -60,14 +60,14 @@ var catanFactory = function () {
 			var downField = (first[0] >= 2) ? -1 : 0;
 			var upField = (downField === 0) ? 1 : 0;
 			// magic fest!
-			
+			console.log('original: ' + coordinateArrayToString(coordinatesArray));
 			if (first[0] === second[0]) {
-				// console.log('gosho');
+				console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
 				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
 				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
-				// console.log('tosho');
+				 console.log('tosho');
 				// console.log(downField);
 				neighbors[0] = [second, third, [third[0] + 1, third[1] + downField]];
 				neighbors[1] = [first, [first[0], first[1] + 1], third];
@@ -226,13 +226,9 @@ var catanFactory = function () {
 					var costKeys = Object.keys(cost);
 
 					for (var i = 0, len = costKeys.length; i < len; i += 1) {
-						// // console.log(this.resources[costKeys[i]], cost[costKeys[i]]);
 						if (this.resources[costKeys[i]] < cost[costKeys[i]]) {
 							return false;
 						}
-					}
-					if (!canBuiltAt(CONSTANTS.buildingsMap, coordinates)) {
-						return false;
 					}
 
 					if (buildingType === 'town' || buildingType === 'village') {
@@ -240,7 +236,6 @@ var catanFactory = function () {
 					}
 
 					this[buildingType + 's'].push(Object.create(building.init(buildingType, coordinates)));
-					// CONSTANTS.buildStructuresCoordinates.push(coordinates);
 					
 					for (i = 0; i < len; i += 1) {
 						this.resources[costKeys[i]] -= cost[costKeys[i]];

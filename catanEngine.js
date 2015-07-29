@@ -48,8 +48,8 @@ var catanEngine = function () {
 
 
 				if (!CONSTANTS.buildState.builtTown && townIndex !== -1) {
-					townCoordinates = gui.getTownCoordinatesAt(townIndex);
-					console.log(turns[townsToPlace - 1]);
+					townCoordinates = sortCoordinatesByRowThenByCol( gui.getTownCoordinatesAt(townIndex));
+					// console.log(turns[townsToPlace - 1]);
 					if (currentPlayer.canBuildVillageAt(townCoordinates)) {
 						currentPlayer.build('village', townCoordinates);
 						gui.drawTownAt(townIndex, turns[townsToPlace - 1]);
@@ -76,7 +76,7 @@ var catanEngine = function () {
 					}
 				}
 
-				console.log(turns[CONSTANTS.startingStructures - 1]);
+				// console.log(turns[CONSTANTS.startingStructures - 1]);
 				gui.drawPlayerGUI(playersObject, turns[CONSTANTS.startingStructures - 1]);
 			}
 
