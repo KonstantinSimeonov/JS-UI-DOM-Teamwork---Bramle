@@ -30,7 +30,7 @@ var catanFactory = function () {
 		buildingsMap: {}
 	};
 
-	function canBuiltAt(buildMap, coordinatesArray) {
+	function canBuiltVillageAt(buildMap, coordinatesArray) {
 
 		coordinatesArray = sortCoordinatesByRowThenByCol(coordinatesArray);
 
@@ -46,7 +46,7 @@ var catanFactory = function () {
 
 
 			}
-			console.log(result);
+			// console.log(result);
 			return result;
 		}
 
@@ -60,14 +60,14 @@ var catanFactory = function () {
 			var downField = (first[0] >= 2) ? -1 : 0;
 			var upField = (downField === 0) ? 1 : 0;
 			// magic fest!
-			console.log('original: ' + coordinateArrayToString(coordinatesArray));
+			// console.log('original: ' + coordinateArrayToString(coordinatesArray));
 			if (first[0] === second[0]) {
-				console.log('gosho');
+				// console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
 				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
 				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
-				 console.log('tosho');
+				// console.log('tosho');
 				// console.log(downField);
 				neighbors[0] = [second, third, [third[0] + 1, third[1] + downField]];
 				neighbors[1] = [first, [first[0], first[1] + 1], third];
@@ -76,6 +76,7 @@ var catanFactory = function () {
 
 			return neighbors;
 		}
+		
 		var coordinateHash = coordinateArrayToString(coordinatesArray);
 
 
@@ -178,10 +179,10 @@ var catanFactory = function () {
 		var player = function () {
 
 			var building = {
-				init: function (buildingType, coordinates, resourceCost) {
+				init: function (buildingTyp, coordinates, resourceCost) {
 					var self = this;
 
-					self.buildingType = buildingType;
+					self.buildingType = buildingTyp;
 					self.coordinates = coordinates;
 					self.resourceCost = resourceCost;
 
@@ -196,16 +197,16 @@ var catanFactory = function () {
 					var self = this;
 
 					self.resources = {
-						clay: 40,
-						wood: 40,
-						sheep: 40,
-						grain: 40,
-						rocks: 40,
-						// clay: 0,
-						// wood: 0,
-						// sheep: 0,
-						// grain: 0,
-						// rocks: 0,
+						// clay: 40,
+						// wood: 40,
+						// sheep: 40,
+						// grain: 40,
+						// rocks: 40,
+						clay: 0,
+						wood: 0,
+						sheep: 0,
+						grain: 0,
+						rocks: 0,
 					};
 					self.towns = [];
 					self.roads = [];
@@ -215,37 +216,46 @@ var catanFactory = function () {
 
 					return self;
 				},
-				build: function (buildingType, coordinates) {
+				build: function (buildingType, coordinates, startOfGame) {
 					// TODO: implement! lol
 					
-					if(coordinates === undefined) {
+					if (coordinates === undefined) {
 						return;
 					}
 
 					var cost = CONSTANTS.costs[buildingType];
 					var costKeys = Object.keys(cost);
 
-					for (var i = 0, len = costKeys.length; i < len; i += 1) {
-						if (this.resources[costKeys[i]] < cost[costKeys[i]]) {
-							return false;
+					if (!startOfGame) {
+						for (var i = 0, len = costKeys.length; i < len; i += 1) {
+							if (this.resources[costKeys[i]] < cost[costKeys[i]]) {
+								return false;
+							}
 						}
 					}
+
 
 					if (buildingType === 'town' || buildingType === 'village') {
 						this.points += 1;
 					}
-
-					this[buildingType + 's'].push(Object.create(building.init(buildingType, coordinates)));
 					
-					for (i = 0; i < len; i += 1) {
-						this.resources[costKeys[i]] -= cost[costKeys[i]];
+					this[buildingType + 's'].push(Object.create(building).init(buildingType, coordinates));
+					// console.log(buildingType + 's');
+					// console.log(this[buildingType + 's']);
+					
+					if (!startOfGame) {
+						for (i = 0; i < len; i += 1) {
+							this.resources[costKeys[i]] -= cost[costKeys[i]];
 
+						}
 					}
+					
 
 					return true;
 				},
 				canBuildVillageAt: function (villageCoordinates) {
-					return canBuiltAt(CONSTANTS.buildingsMap, villageCoordinates);
+					var spotIsFree = canBuiltVillageAt(CONSTANTS.buildingsMap, villageCoordinates);
+					return spotIsFree;
 				}
 			};
 		} ();

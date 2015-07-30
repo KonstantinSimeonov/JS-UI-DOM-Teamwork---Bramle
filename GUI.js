@@ -80,7 +80,8 @@ var GUI = function () {
 				anim,
 				townCoordinateInfo,
 				roadCoordinateInfo,
-				magicNumber = -1;
+				magicNumber = -1,
+				magicNumber2 = -1;
 
 			var screenScale = 1275 / screen.availHeight;
 			var widthScale = 2400 / screen.availWidth;
@@ -100,7 +101,8 @@ var GUI = function () {
 				roadCoordinateInfo = {
 					x: xValue + (hexRadius + 5) * Math.cos(pi * i) - 11,
 					y: yValue + (hexRadius + 5) * Math.sin(pi * i) + 11,
-					rotation: i + 1
+					rotation: i + 1,
+					tileAccess: [tile]
 				};
 				if (!CONSTANTS.townCoordinates.some(function (point) {
 					magicNumber += 1;
@@ -112,13 +114,17 @@ var GUI = function () {
 					CONSTANTS.townCoordinates[magicNumber].tileAccess.push(tile);
 				}
 				if (!CONSTANTS.roadCoordinates.some(function (point) {
+					magicNumber2 += 1;
 					return (Math.abs(point.x - roadCoordinateInfo.x) + Math.abs(point.y - roadCoordinateInfo.y)) < 50;
 				})) {
 					CONSTANTS.roadCoordinates.push(
 						roadCoordinateInfo
 						);
+				} else {
+					CONSTANTS.roadCoordinates[magicNumber2].tileAccess.push(tile);
 				}
 				magicNumber = -1;
+				magicNumber2 = -1;
 
 			}
 
@@ -301,6 +307,8 @@ var GUI = function () {
 		self.context.strokeStyle = 'black';
 		self.context.fillText('Player ' + (playerNumber), startingPoint.x, startingPoint.y + 10);
 		self.context.strokeText('Player ' + (playerNumber), startingPoint.x, startingPoint.y + 10);
+		self.context.fillText('Points: ' + player.points, startingPoint.x + 150, startingPoint.y + 10);
+		self.context.strokeText('Points: ' + player.points, startingPoint.x + 150, startingPoint.y + 10);
 
 		resourceHand = new Image();
 		resourceHand.src = CONSTANTS.playerUI.imagePaths.resourceHand;
@@ -328,8 +336,8 @@ var GUI = function () {
 		self.context.strokeText(controlNames.tradeButton, buttonsOffset.x, buttonsOffset.y);
 		self.context.fillText(controlNames.buildButton, buttonsOffset.x + 100, buttonsOffset.y);
 		self.context.strokeText(controlNames.buildButton, buttonsOffset.x + 100, buttonsOffset.y);
-		self.context.fillText(controlNames.rollButton, buttonsOffset.x + 200, buttonsOffset.y);
-		self.context.strokeText(controlNames.rollButton, buttonsOffset.x + 200, buttonsOffset.y);
+		self.context.fillText('End', buttonsOffset.x + 200, buttonsOffset.y);
+		self.context.strokeText('End', buttonsOffset.x + 200, buttonsOffset.y);
 
 		self.buttonCoordinates[playerNumber] = {
 			Trade: {
@@ -353,8 +361,8 @@ var GUI = function () {
 		
 		for (i = 0, len = CONSTANTS.resourceTypes.length - 1, currentOffsetX = 10; i < len; i += 1) {
 			self.context.strokeStyle = 'black';
-			self.context.fillText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX, startingPoint.y + handOffset.y + tooltipOffsetY[i]);
-			self.context.strokeText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX, startingPoint.y + handOffset.y + tooltipOffsetY[i]);
+			self.context.fillText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX / 1.1, startingPoint.y + handOffset.y + tooltipOffsetY[i]);
+			self.context.strokeText(player.resources[CONSTANTS.resourceTypes[i]], currentOffsetX + startingPoint.x + handOffset.x + currentOffsetX / 1.1, startingPoint.y + handOffset.y + tooltipOffsetY[i]);
 
 			currentOffsetX += 35;
 
@@ -377,26 +385,29 @@ var GUI = function () {
 			// 351 406
 			
 			self.buttonCoordinates = {
-				isClicked: function (clientX, clientY) {
-					// // console.log(clientX, clientY);
-					if (clientY > 380 && clientY < 420) {
 
-						if (clientX > 20 && clientX < 115) {
-							return 'Trade';
-						}
-
-						if (clientX > 170 && clientX < 250) {
-							return 'Build';
-						}
-
-						if (clientX > 330 && clientX < 390) {
-							return 'Roll';
-						}
-					}
-				}
 			};
 
 			return self;
+		},
+		getClickedCommand: function (clientX, clientY) {
+			// // console.log(clientX, clientY);
+			if (250 < clientY && clientY < 275) {
+
+				if (55 < clientX && clientX < 145) {
+					return 'Trade';
+				}
+
+				if (165 < clientX && clientX < 260) {
+					return 'Build';
+				}
+				
+				if(280 < clientX && clientX < 310) {
+					return 'End';
+				}
+			}
+
+			return 'none';
 		},
 		drawField: function (fieldLayout) {
 
@@ -436,8 +447,11 @@ var GUI = function () {
 		getTownCoordinatesAt: function (spotIndex) {
 			return CONSTANTS.townCoordinates[spotIndex].tileAccess.slice();
 		},
+		getRoadCoordinatesAt: function (spotIndex) {
+			return CONSTANTS.roadCoordinates[spotIndex].tileAccess.slice();
+		},
 		drawRoadAt: function (spotIndex, playerNumber) {
-			
+
 			if (CONSTANTS.roadCoordinates[spotIndex].builtOn) {
 				return;
 			}
@@ -476,12 +490,12 @@ var GUI = function () {
 				coords = CONSTANTS.playerUI.circularCoordinates,
 				gui = this;
 			gui.context.clearRect(0, 0, gui.canvas.width, gui.canvas.height);
-			
-			
+
+
 			for (var i = 0; i < 4; i += 1) {
 				var scale = i === 0 ? { x: 1.5, y: 1.3 } : { x: 0.5, y: 0.5 };
 				fillPlayerInterface.call(gui, playersArray[playerTurn - 1], coords[i], playerTurn, scale);
-				playerTurn+=1;
+				playerTurn += 1;
 				playerTurn %= 5;
 				if (playerTurn === 0) {
 					playerTurn += 1;

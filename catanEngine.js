@@ -1,4 +1,5 @@
 var catanEngine = function () {
+
 	var CONSTANTS = {
 		startingStructures: 8,
 		startingPlacementTurn: [1, 2, 3, 4, 4, 3, 2, 1],
@@ -26,13 +27,50 @@ var catanEngine = function () {
 
 			self.gui = GUI.init();
 			self.factory = factory;
-
+			self.dice = D6AnimBuilder.get('dice');
+			self.rollButton = document.getElementById('dicebutton');
+			self.rollButton.disabled = true;
+			// console.log(self.dice);
+			
 			return self;
 		},
 		run: function () {
 
+			function distributeResource() {
+				players.map(function (p) {
+
+					p.towns.map(function (t) {
+						// console.log(t);
+						t.coordinates.map(function (c) {
+							// console.log(self.diceRoll, field.layout[c[0]][c[1]]);
+							if (c[0] !== -1 && c[1] !== -1 && self.diceRoll === field.layout[c[0]][c[1]].id) {
+								// console.log(p[field.layout[c[0]][c[1]].resource]);
+								p.resources[field.layout[c[0]][c[1]].resource] += 1;
+							}
+						})
+					})
+				});
+				
+				// for (var i = 0, len1 = players.length; i < len1; i+=1) {
+				// 	for (var j = 0, len2 = players[i].towns.length, player = players[i]; j < len2; j+=1) {
+				// 		for (var z = 0, len3 = player.towns[j].length, town = player.towns[j]; z < len3; z++) {
+				// 			if(field.layout[town.coordinates[0]][town.coordinates[1]].id === this.diceRoll) {
+				// 				player.resources[field.layout[town.coordinates[0]][town.coordinates[1]].resource]+=1;
+				// 			}
+				// 			console.log(field.layout[town.coordinates[0]][town.coordinates[1]].id);
+				// 		}
+				// 		
+				// 	}
+				// 	
+				// }
+			}
+
 			function printMessage(message) {
 				alert(message);
+			}
+
+			function logClickCoordinates(e) {
+				console.log(e.clientX, e.clientY);
 			}
 
 			function placeStartingStructures(e) {
@@ -48,16 +86,18 @@ var catanEngine = function () {
 
 
 				if (!CONSTANTS.buildState.builtTown && townIndex !== -1) {
-					townCoordinates = sortCoordinatesByRowThenByCol( gui.getTownCoordinatesAt(townIndex));
+					townCoordinates = sortCoordinatesByRowThenByCol(gui.getTownCoordinatesAt(townIndex));
 					// console.log(turns[townsToPlace - 1]);
 					if (currentPlayer.canBuildVillageAt(townCoordinates)) {
-						currentPlayer.build('village', townCoordinates);
+						currentPlayer.build('town', townCoordinates, true);
+						// console.log(currentPlayer.towns);
 						gui.drawTownAt(townIndex, turns[townsToPlace - 1]);
 						CONSTANTS.buildState.builtTown = true;
 					}
 				}
 				if (!CONSTANTS.buildState.builtRoad && roadIndex !== -1) {
-					currentPlayer.build('road', roadCoordinates);
+					roadCoordinates = sortCoordinatesByRowThenByCol(gui.getRoadCoordinatesAt(roadIndex));
+					currentPlayer.build('road', roadCoordinates, true);
 					gui.drawRoadAt(roadIndex, turns[townsToPlace - 1]);
 					CONSTANTS.buildState.builtRoad = true;
 				}
@@ -69,9 +109,11 @@ var catanEngine = function () {
 
 					if (CONSTANTS.startingStructures === 0) {
 						gui.drawPlayerGUI(playersObject, turns[CONSTANTS.startingStructures])
-						window.onclick = function (e) {
-							alert('done!');
-						}
+						// window.onclick = function (e) {
+						// 	alert('done!');
+						// }
+						window.onclick = executePlayerTurn;
+						self.rollButton.disabled = false;
 						return;
 					}
 				}
@@ -80,9 +122,38 @@ var catanEngine = function () {
 				gui.drawPlayerGUI(playersObject, turns[CONSTANTS.startingStructures - 1]);
 			}
 
+			function executePlayerTurn(e) {
+				var command = self.gui.getClickedCommand(e.clientX, e.clientY);
+
+
+				if (command === 'Build') {
+					// TODO: build logic here
+					console.log(players[0].towns);
+				} else if (command === 'Trade') {
+					// TODO: trading logic hee
+				} else if (command === 'End') {
+					currentPlayerTurn += 1;
+					currentPlayerTurn %= 5;
+					if (currentPlayerTurn === 0) {
+						currentPlayerTurn += 1;
+					}
+					self.rollButton.style.background = playerColors[currentPlayerTurn - 1];
+					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+					self.rollButton.disabled = false;
+				}
+			}
+
 			function initGame() {
 				printMessage('Every player should choose a town and road');
 				window.onclick = placeStartingStructures;
+				// window.onclick = logClickCoordinates;
+				self.rollButton.onclick = function (e) {
+					console.log('gosho');
+					self.roll();
+					distributeResource();
+					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+					self.rollButton.disabled = true;
+				}
 
 			}
 
@@ -101,6 +172,9 @@ var catanEngine = function () {
 			self.gui.drawField(field.layout);
 
 			initGame();
+			
+			
+			
 			//function handleBuildRequest(player) {
             //
 			//}
@@ -208,9 +282,9 @@ var catanEngine = function () {
 			//// gui.animateDice();
 		},
 		roll: function rollDice() {
-			var diceResult = (Math.ceil(Math.random() * 1000) % 6) + 1;
-
-			return diceResult;
+			this.dice.start('dice');
+			this.diceRoll = this.dice.results[0] + this.dice.results[1];
+			this.dice.reset('dice');
 		}
 	};
 
