@@ -9,7 +9,6 @@ var catanFactory = function () {
 
 			return x[1] - y[1];
 		});
-
 	}
 
 	var CONSTANTS = {
@@ -91,9 +90,6 @@ var catanFactory = function () {
 		var canBuild = true;
 
 		neighbors.map(function (neighbor) {
-			
-			// // console.log(neighbor);
-			// // console.log(buildMap[coordinateArrayToString(neighbor)]);
 			if (buildMap[coordinateArrayToString(neighbor)] !== undefined) {
 				canBuild = false;
 			}
