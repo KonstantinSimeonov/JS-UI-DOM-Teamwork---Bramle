@@ -33,7 +33,7 @@ var catanFactory = function () {
 
 		coordinatesArray = sortCoordinatesByRowThenByCol(coordinatesArray);
 
-		function coordinateArrayToString(cArr) {
+		function hashCoordinateArray(cArr) {
 			var result = '';
 
 			for (var i = 0; i < 3; i += 1) {
@@ -45,7 +45,7 @@ var catanFactory = function () {
 
 
 			}
-			 console.log(result);
+			 // console.log(result);
 			return result;
 		}
 
@@ -58,8 +58,8 @@ var catanFactory = function () {
 
 			var downField = (first[0] >= 1) ? -1 : 0;
 			var upField = (downField === 0) ? 1 : 0;
-			// magic fest!
-			console.log('original: ' + coordinateArrayToString(coordinatesArray));
+			// coordinate transformation
+			// console.log('original: ' + hashCoordinateArray(coordinatesArray));
 			if (first[0] === second[0]) {
 				// console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
@@ -76,21 +76,19 @@ var catanFactory = function () {
 			return neighbors;
 		}
 		
-		var coordinateHash = coordinateArrayToString(coordinatesArray);
+		var coordinateHash = hashCoordinateArray(coordinatesArray);
 
 
 		if (buildMap[coordinateHash] !== undefined) {
 			return false;
 		}
 
-
-
 		var neighbors = getNeighbors(coordinatesArray);
 		// // console.log(coordinatesArray, neighbors);
 		var canBuild = true;
 
 		neighbors.map(function (neighbor) {
-			if (buildMap[coordinateArrayToString(neighbor)] !== undefined) {
+			if (buildMap[hashCoordinateArray(neighbor)] !== undefined) {
 				canBuild = false;
 			}
 		});

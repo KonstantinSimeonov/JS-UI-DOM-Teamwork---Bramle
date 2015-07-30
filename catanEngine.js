@@ -25,7 +25,7 @@ var catanEngine = function () {
 		init: function (gui, factory) {
 			var self = this;
 
-			self.gui = GUI.init();
+			self.gui = gui.init();
 			self.factory = factory;
 			self.dice = D6AnimBuilder.get('dice');
 			self.rollButton = document.getElementById('dicebutton');
@@ -140,6 +140,10 @@ var catanEngine = function () {
 				} else if (command === 'Trade') {
 					// TODO: trading logic hee
 				} else if (command === 'End') {
+					
+					if(players[currentPlayerTurn - 1].points >= 10) {
+						alert('Player ' + currentPlayerTurn + ' wins');
+					}
 					currentPlayerTurn += 1;
 					currentPlayerTurn %= 5;
 					if (currentPlayerTurn === 0) {
@@ -148,6 +152,8 @@ var catanEngine = function () {
 					self.rollButton.style.background = playerColors[currentPlayerTurn - 1];
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 					self.rollButton.disabled = false;
+					
+					
 				}
 			}
 
@@ -155,6 +161,7 @@ var catanEngine = function () {
 				printMessage('Every player should choose a town and road');
 				window.onclick = placeStartingStructures;
 				// window.onclick = logClickCoordinates;
+				// window.onclick = executePlayerTurn;
 				self.rollButton.onclick = function (e) {
 					console.log('gosho');
 					self.roll();

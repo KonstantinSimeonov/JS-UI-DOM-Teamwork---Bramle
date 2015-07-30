@@ -67,18 +67,24 @@ D6Animator.getImageBank = function (key, baseUrl) {
             baseUrl = D6Animator.baseUrl;
         if (typeof baseUrl != "string") baseUrl = "";
         imageBank.blank = new Image();
-        imageBank.blank.src = baseUrl + "blank.gif";
+        // imageBank.blank.src = baseUrl + "blank.gif";
+        imageBank.blank.src = baseUrl + "blank.svg";
 
         var i;
         for (i = 1; i < 7; ++i) {
             whichDie = "die" + i;
             imageBank[whichDie] = new Object();
             imageBank[whichDie].die = new Image();
-            imageBank[whichDie].die.src = baseUrl + "die-" + i + ".gif";
+            // imageBank[whichDie].die.src = baseUrl + "die-" + i + ".gif";
+            // imageBank[whichDie].side = new Image();
+            // imageBank[whichDie].side.src = baseUrl + "dices-" + i + ".gif";
+            // imageBank[whichDie].top = new Image();
+            // imageBank[whichDie].top.src = baseUrl + "dicet-" + i + ".gif";
+            imageBank[whichDie].die.src = baseUrl + "die-" + i + ".svg";
             imageBank[whichDie].side = new Image();
-            imageBank[whichDie].side.src = baseUrl + "dices-" + i + ".gif";
+            imageBank[whichDie].side.src = baseUrl + "dices-" + i + ".svg";
             imageBank[whichDie].top = new Image();
-            imageBank[whichDie].top.src = baseUrl + "dicet-" + i + ".gif";
+            imageBank[whichDie].top.src = baseUrl + "dicet-" + i + ".svg";
             // console.log(imageBank[whichDie].top.src);
         }
 
@@ -371,7 +377,8 @@ D6AnimBuilder.prototype.genDiceHtml = function (layout, callback, callbackData) 
             ++dieCount;
             if (dieCount > numTotalImgs) break;
             if (this.useImages) {
-                genHtml += "<img id='" + this.id + dieCount + "' class='die' src='" + this.baseUrl + "die-6.gif' />";
+                genHtml += "<img id='" + this.id + dieCount + "' class='die' src='" + this.baseUrl + "die-6.svg' />";
+                // genHtml += "<img id='" + this.id + dieCount + "' class='die' src='" + this.baseUrl + "die-6.gif' />";
             } else {
                 genHtml += "<span id='" + this.id + dieCount + "' class='dieNumber'>&nbsp;</span> ";
             }
