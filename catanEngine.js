@@ -108,10 +108,35 @@ var catanEngine = function () {
 			function executePlayerTurn(e) {
 				var command = self.gui.getClickedCommand(e.clientX, e.clientY);
 
-
 				if (command === 'Build') {
-					// TODO: build logic here
-					console.log(players[0].towns);
+					window.onclick = function (e) {
+						var townIndex = self.gui.indexOfTownCoordinates(e),
+							roadIndex = self.gui.indexOfRoadCoordinates(e),
+							currentPlayer = players[currentPlayerTurn - 1],
+							townCoordinates,
+							roadCoordinates;
+
+
+						if (townIndex !== -1) {
+							townCoordinates = sortCoordinatesByRowThenByCol(self.gui.getTownCoordinatesAt(townIndex));
+							// console.log(turns[townsToPlace - 1]);
+							if (currentPlayer.canBuildVillageAt(townCoordinates)) {
+								currentPlayer.build('town', townCoordinates, false);
+								// console.log(currentPlayer.towns);
+								self.gui.drawTownAt(townIndex, currentPlayerTurn);
+								window.onclick = executePlayerTurn;
+								self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+							}
+						}
+						
+						if (roadIndex !== -1) {
+							roadCoordinates = sortCoordinatesByRowThenByCol(self.gui.getRoadCoordinatesAt(roadIndex));
+							currentPlayer.build('road', roadCoordinates, false);
+							self.gui.drawRoadAt(roadIndex, currentPlayerTurn);
+							window.onclick = executePlayerTurn;
+							self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+						}
+					}
 				} else if (command === 'Trade') {
 					// TODO: trading logic hee
 				} else if (command === 'End') {
@@ -137,16 +162,14 @@ var catanEngine = function () {
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 					self.rollButton.disabled = true;
 				}
-
 			}
-
-			var playerColors = ['red', 'blue', 'green', 'yellow'];
 
 			var self = this,
 				field = self.factory.getField().init(),
 				playersObject = self.factory.getPlayers(),
 				players = [playersObject.red, playersObject.blue, playersObject.green, playersObject.yellow],
-				currentPlayerTurn = 1;
+				currentPlayerTurn = 1,
+				playerColors = ['red', 'blue', 'green', 'yellow'];
 
 			self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 			self.gui.drawField(field.layout);
@@ -159,5 +182,4 @@ var catanEngine = function () {
 			this.dice.reset('dice');
 		}
 	};
-
 } ();
