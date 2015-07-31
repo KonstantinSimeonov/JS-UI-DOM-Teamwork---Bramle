@@ -1,12 +1,13 @@
 var catanEngine = function () {
-
+	
 	var CONSTANTS = {
 		startingStructures: 8,
 		startingPlacementTurn: [1, 2, 3, 4, 4, 3, 2, 1],
 		buildState: {
 			builtRoad: false,
 			builtTown: false
-		}
+		},
+		winningScore: 10
 	};
 
 	function sortCoordinatesByRowThenByCol(coordinateArray) {
@@ -172,8 +173,12 @@ var catanEngine = function () {
 
 				} else if (command === 'End') {
 
-					if (players[currentPlayerTurn - 1].points >= 10) {
-						alert('Player ' + currentPlayerTurn + ' wins');
+					if (players[currentPlayerTurn - 1].points >= CONSTANTS.winningScore) {
+						// alert('Player ' + currentPlayerTurn + ' wins');
+						self.gui.displayEndGameScreen(playerColors[currentPlayerTurn - 1], playersObject);
+						window.onclick = function (e) {
+							
+						}
 					}
 					currentPlayerTurn += 1;
 					currentPlayerTurn %= 5;

@@ -1,5 +1,5 @@
 var GUI = function () {
-	
+
 	var CONSTANTS = {
 		fieldStartingPoint: { x: 500, y: 40 },
 		resourceTypes: ['clay', 'wood', 'sheep', 'grain', 'rocks', 'none'],
@@ -51,6 +51,7 @@ var GUI = function () {
 		height: screen.availHeight
 	});
 	var fieldIsDrawn = false;
+
 	var animate = function () {
 		//var kopon = true;
 
@@ -155,6 +156,20 @@ var GUI = function () {
 		return animateFieldBlock;
 
 	} ();
+
+	function endGame(color, players) {
+
+
+		//TODO sort players by points
+
+		var body = document.getElementById('body'),
+			winnerDiv;
+		body.innerHTML = '<div id="winnerDiv">WINNER:<\/div>';
+		winnerDiv = body.children[0];
+		winnerDiv.innerHTML += '<span id="winnerColor">' + color + ' player!' + '<\/span>';
+		document.getElementById('winnerColor').style.color = color;
+		body.innerHTML += '<footer>Brumble&trade;</footer>';
+	}
 
 	function fillField(fieldLayout) {
 
@@ -318,8 +333,8 @@ var GUI = function () {
 				if (165 < clientX && clientX < 260) {
 					return 'Build';
 				}
-				
-				if(280 < clientX && clientX < 310) {
+
+				if (280 < clientX && clientX < 310) {
 					return 'End';
 				}
 			}
@@ -493,6 +508,7 @@ var GUI = function () {
 			}
 
 			return notInside;
-		}
+		},
+		displayEndGameScreen: endGame
 	};
 } ();
