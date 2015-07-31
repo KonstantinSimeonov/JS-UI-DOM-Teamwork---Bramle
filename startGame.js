@@ -5,44 +5,49 @@ var buttonStart = document.getElementById('start'),
     newDiv = document.createElement('div'),
     container = document.getElementsByClassName('toShowOnStart')[0],
     canvas = document.getElementsByClassName('toShowOnStart')[1],
-    dice = document.getElementById('diceall');
+    dice = document.getElementById('diceall'),
+    content = document.getElementById('content'),
+    main = document.getElementById('main');
 
+//
+//function startGame() {
+//    document.body.appendChild(newDiv);
+//    newDiv.id = 'withCanvas';
+//    newDiv.innerHTML = '<canvas id="canvas" width="1700" height="1100"></canvas>';
+//    catanEngine.init(GUI, catanFactory).run();
+//};
+//
+////remove only one button
+////function hideShow() {
+////    document.getElementById('Start button').style.display = 'block';
+////    this.style.display = 'none'
+////}
+//
+//function removeText() {
+//    div.parentNode.removeChild(div);
+//}
+//
 
-function startGame() {
-    document.body.appendChild(newDiv);
-    newDiv.id = 'withCanvas';
-    newDiv.innerHTML = '<canvas id="canvas" width="1700" height="1100"></canvas>';
-    catanEngine.init(GUI, catanFactory).run();
-};
-
-//remove only one button
-//function hideShow() {
-//    document.getElementById('Start button').style.display = 'block';
-//    this.style.display = 'none'
+//
+//function removeBackground() {
+//    document.getElementById('body').style.background = 'none';
 //}
 
-function removeText() {
-    div.parentNode.removeChild(div);
-}
-
 function showContent() {
-    document.getElementById('content').style.display = 'block';
-    document.getElementById('main').style.display = 'none';
+    content.style.display = 'block';
+    main.style.display = 'none';
 }
 
 function getBack() {
-    document.getElementById('content').style.display = 'none';
-    document.getElementById('main').style.display = 'block';
+    content.style.display = 'none';
+    main.style.display = 'block';
 }
 
-function removeBackground() {
-    document.getElementById('body').style.background = 'none';
-}
 function start() {
     dice.style.display = 'block';
     canvas.style.display = 'block';
     container.style.display = 'block';
-    document.body.removeChild(document.getElementById('main'));
+    document.body.removeChild(main);
     document.getElementById('canvas').style.width = screen.availWidth / 4 + 'px';
     catanEngine.init(GUI, catanFactory);
     catanEngine.run();

@@ -119,7 +119,7 @@ footer{
     font-size: x-large;
     color: white;
 
-    box-shadow: 5px 5px 5px #A30002;
+    box-shadow: 5px 5px 5px black;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#870002+0,c90003+100 */
     background: rgb(135,0,2); /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover,  rgba(135,0,2,1) 0%, rgba(201,0,3,1) 100%); /* FF3.6+ */
