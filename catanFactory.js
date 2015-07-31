@@ -41,19 +41,29 @@ var catanFactory = function () {
 
 
 		}
-		// console.log(result);
+		 // console.log(result);
+		//  console.log(CONSTANTS.buildingsMap[result]);
+		return result;
+	}
+
+	function hashRoadCoordinates(cArr) {
+		var result = '';
+
+		for (var i = 0; i < 2; i += 1) {
+			result += cArr[i][0] + 'a' + cArr[i][1];
+		}
 		return result;
 	}
 
 	function canBuildTownAt(buildMap, coordinatesArray) {
 		var coordinatesHash = hashCoordinateArray(coordinatesArray);
-		if(buildMap[coordinatesHash] && buildMap[coordinatesHash] !== 'town') {
+		if (buildMap[coordinatesHash] && buildMap[coordinatesHash] !== 'town') {
 			buildMap[coordinatesHash] = 'town';
 			return true;
 		}
 		return false;
 	}
-	
+
 	function canBuiltVillageAt(buildMap, coordinatesArray) {
 
 		coordinatesArray = sortCoordinatesByRowThenByCol(coordinatesArray);
@@ -66,12 +76,13 @@ var catanFactory = function () {
 				third = coordinatesArray[2].slice();
 
 			var downField = (first[0] >= 1) ? -1 : 0;
-			var upField = (downField === 0) ? 1 : 0;
+			var upField = (first[0] <= 1) ? 1 : 0;
 			// coordinate transformation
 			// console.log('original: ' + hashCoordinateArray(coordinatesArray));
 			if (first[0] === second[0]) {
 				// console.log('gosho');
 				neighbors[0] = [[first[0] - 1, first[1] + 1 - upField], first, second];
+				console.log([first, [first[0] + 1, first[1] + downField], third]);
 				neighbors[1] = [first, [first[0] + 1, first[1] + downField], third];
 				neighbors[2] = [second, third, [second[0] + 1, second[1] + upField]];
 			} else {
@@ -246,7 +257,7 @@ var catanFactory = function () {
 
 					if (!startOfGame) {
 						for (i = 0, len = costKeys.length; i < len; i += 1) {
-							
+
 							this.resources[costKeys[i]] -= cost[costKeys[i]];
 
 						}
@@ -274,8 +285,10 @@ var catanFactory = function () {
 					return true;
 				},
 				canBuildRoadAt: function (roadCoordinates) {
-
-					return true;
+					if(!CONSTANTS.buildingsMap[hashRoadCoordinates(roadCoordinates)]) {
+						return true;
+					}
+					
 				},
 				canBuildTownAt: function (townCoordinates) {
 					return canBuildTownAt(CONSTANTS.buildingsMap, townCoordinates);

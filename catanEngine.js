@@ -125,7 +125,7 @@ var catanEngine = function () {
 								self.gui.drawTownAt(townIndex, currentPlayerTurn);
 								window.onclick = executePlayerTurn;
 								self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
-							} else if(currentPlayer.hasResourcesToBuild('town', false) && currentPlayer.canBuildTownAt(townCoordinates)) {
+							} else if (currentPlayer.hasResourcesToBuild('town', false) && currentPlayer.canBuildTownAt(townCoordinates)) {
 								currentPlayer.build('town', townCoordinates, false);
 								self.gui.drawTAt(townIndex, currentPlayerTurn);
 								window.onclick = executePlayerTurn;
@@ -135,7 +135,7 @@ var catanEngine = function () {
 
 						if (roadIndex !== -1) {
 							roadCoordinates = sortCoordinatesByRowThenByCol(self.gui.getRoadCoordinatesAt(roadIndex));
-							if (currentPlayer.hasResourcesToBuild('road', false) && currentPlayer.canBuildRoadAt(roadCoordinates)){
+							if (currentPlayer.hasResourcesToBuild('road', false) && currentPlayer.canBuildRoadAt(roadCoordinates)) {
 								currentPlayer.build('road', roadCoordinates, false);
 								self.gui.drawRoadAt(roadIndex, currentPlayerTurn);
 								window.onclick = executePlayerTurn;
@@ -144,20 +144,32 @@ var catanEngine = function () {
 						}
 					}
 				} else if (command === 'Trade') {
+					
 					var tradeInfo = prompt('Enter trade info. Format is: *player to trade with* *given resource type* *amount* *received resource type* *amount*');
+					console.log(tradeInfo);
 					var splitInfo = tradeInfo.split(' ');
-					
+					console.log(splitInfo);
+
 					var tradePlayer2 = playersObject[splitInfo[0]];
-					
+
 					var tradingPlayer = players[currentPlayerTurn - 1];
-					var givenType = tradeInfo[1];
-					var givenAmount = tradeInfo[2] * 1;
-					var hasEnoughToTrade = true;
-					if(tradingPlayer.resources[givenType] >= givenAmount) {
-						
+					var givenType = splitInfo[1];
+					console.log(playersObject);
+					console.log(tradePlayer2);
+					var givenAmount = splitInfo[2] * 1;
+					var receivedType = splitInfo[3];
+					var receivedAmount = splitInfo[4] * 1;
+					var hasEnoughToTrade = (tradingPlayer.resources[givenType] >= givenAmount) && (tradePlayer2.resources[receivedType] >= receivedAmount);
+					
+					if(hasEnoughToTrade) {
+						tradingPlayer.resources[givenType] -= givenAmount;
+						tradingPlayer.resources[receivedType] += receivedAmount;
+						tradePlayer2.resources[receivedType] -= receivedAmount;
+						tradePlayer2.resources[givenType] += givenAmount
 					}
-					
-					
+					window.onclick = executePlayerTurn;
+					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+
 				} else if (command === 'End') {
 
 					if (players[currentPlayerTurn - 1].points >= 10) {
@@ -172,7 +184,7 @@ var catanEngine = function () {
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 					self.rollButton.disabled = false;
 
-
+					
 				}
 			}
 
@@ -182,7 +194,7 @@ var catanEngine = function () {
 				// window.onclick = logClickCoordinates;
 				window.onclick = executePlayerTurn;
 				self.rollButton.onclick = function (e) {
-					 // console.log('gosho');
+					// console.log('gosho');
 					self.roll();
 					distributeResource();
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);

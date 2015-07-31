@@ -347,7 +347,7 @@ var GUI = function () {
 			// this.context.scale(1 / 1.3, 1 / 1.3);
 			
 			img.onload = function () {
-				var selo = new Kinetic.Image({
+				var village = new Kinetic.Image({
 					x: CONSTANTS.townCoordinates[spotIndex].x - img.width / 2,
 					y: CONSTANTS.townCoordinates[spotIndex].y - img.height / 2,
 					image: img,
@@ -355,20 +355,18 @@ var GUI = function () {
 					height: img.height
 				});
 
-				layer.add(selo);
+				layer.add(village);
 				stage.add(layer);
 				// // console.log(stage);
 
 			};
 		},
 		drawTAt: function (spotIndex, playerNumber) {
-
 			// if (CONSTANTS.townCoordinates[spotIndex].buildOn) {
 			// 	return;
 			// }
 			
 			// // console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
-			
 			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
 			// console.log(playerNumber);
 			var img = new Image();
