@@ -116,32 +116,51 @@ var catanEngine = function () {
 							townCoordinates,
 							roadCoordinates;
 
-
 						if (townIndex !== -1) {
 							townCoordinates = sortCoordinatesByRowThenByCol(self.gui.getTownCoordinatesAt(townIndex));
 							// console.log(turns[townsToPlace - 1]);
-							if (currentPlayer.canBuildVillageAt(townCoordinates)) {
-								currentPlayer.build('town', townCoordinates, false);
+							if (currentPlayer.hasResourcesToBuild('village', false) && currentPlayer.canBuildVillageAt(townCoordinates)) {
+								currentPlayer.build('village', townCoordinates, false);
 								// console.log(currentPlayer.towns);
 								self.gui.drawTownAt(townIndex, currentPlayerTurn);
 								window.onclick = executePlayerTurn;
 								self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+							} else if(currentPlayer.hasResourcesToBuild('town', false) && currentPlayer.canBuildTownAt(townCoordinates)) {
+								currentPlayer.build('town', townCoordinates, false);
+								self.gui.drawTAt(townIndex, currentPlayerTurn);
+								window.onclick = executePlayerTurn;
+								self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 							}
 						}
-						
+
 						if (roadIndex !== -1) {
 							roadCoordinates = sortCoordinatesByRowThenByCol(self.gui.getRoadCoordinatesAt(roadIndex));
-							currentPlayer.build('road', roadCoordinates, false);
-							self.gui.drawRoadAt(roadIndex, currentPlayerTurn);
-							window.onclick = executePlayerTurn;
-							self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+							if (currentPlayer.hasResourcesToBuild('road', false) && currentPlayer.canBuildRoadAt(roadCoordinates)){
+								currentPlayer.build('road', roadCoordinates, false);
+								self.gui.drawRoadAt(roadIndex, currentPlayerTurn);
+								window.onclick = executePlayerTurn;
+								self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
+							}
 						}
 					}
 				} else if (command === 'Trade') {
-					// TODO: trading logic hee
-				} else if (command === 'End') {
+					var tradeInfo = prompt('Enter trade info. Format is: *player to trade with* *given resource type* *amount* *received resource type* *amount*');
+					var splitInfo = tradeInfo.split(' ');
 					
-					if(players[currentPlayerTurn - 1].points >= 10) {
+					var tradePlayer2 = playersObject[splitInfo[0]];
+					
+					var tradingPlayer = players[currentPlayerTurn - 1];
+					var givenType = tradeInfo[1];
+					var givenAmount = tradeInfo[2] * 1;
+					var hasEnoughToTrade = true;
+					if(tradingPlayer.resources[givenType] >= givenAmount) {
+						
+					}
+					
+					
+				} else if (command === 'End') {
+
+					if (players[currentPlayerTurn - 1].points >= 10) {
 						alert('Player ' + currentPlayerTurn + ' wins');
 					}
 					currentPlayerTurn += 1;
@@ -152,18 +171,18 @@ var catanEngine = function () {
 					self.rollButton.style.background = playerColors[currentPlayerTurn - 1];
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);
 					self.rollButton.disabled = false;
-					
-					
+
+
 				}
 			}
 
 			function initGame() {
 				printMessage('Every player should choose a town and road');
-				window.onclick = placeStartingStructures;
+				// window.onclick = placeStartingStructures;
 				// window.onclick = logClickCoordinates;
-				// window.onclick = executePlayerTurn;
+				window.onclick = executePlayerTurn;
 				self.rollButton.onclick = function (e) {
-					console.log('gosho');
+					 // console.log('gosho');
 					self.roll();
 					distributeResource();
 					self.gui.drawPlayerGUI(playersObject, currentPlayerTurn);

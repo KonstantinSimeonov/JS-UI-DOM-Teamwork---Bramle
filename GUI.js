@@ -362,6 +362,38 @@ var GUI = function () {
 
 			};
 		},
+		drawTAt: function (spotIndex, playerNumber) {
+
+			// if (CONSTANTS.townCoordinates[spotIndex].buildOn) {
+			// 	return;
+			// }
+			
+			// // console.log(CONSTANTS.townCoordinates[spotIndex].tileAccess);
+			
+			CONSTANTS.townCoordinates[spotIndex].buildOn = true;
+			// console.log(playerNumber);
+			var img = new Image();
+			img.src = 'images/towns/' + CONSTANTS.playerUI.styles.fontColors[playerNumber - 1] + 'town.png';
+			// img.src = 'images/towns/town.png';
+			// this.context.scale(1.3, 1.3);
+			// this.context.drawImage(img, x / 1.3, y / 1.3);
+			// this.context.scale(1 / 1.3, 1 / 1.3);
+			
+			img.onload = function () {
+				var selo = new Kinetic.Image({
+					x: CONSTANTS.townCoordinates[spotIndex].x - img.width / 2,
+					y: CONSTANTS.townCoordinates[spotIndex].y - img.height / 2,
+					image: img,
+					width: img.width,
+					height: img.height
+				});
+
+				layer.add(selo);
+				stage.add(layer);
+				// // console.log(stage);
+
+			};
+		},
 		getTownCoordinatesAt: function (spotIndex) {
 			return CONSTANTS.townCoordinates[spotIndex].tileAccess.slice();
 		},
