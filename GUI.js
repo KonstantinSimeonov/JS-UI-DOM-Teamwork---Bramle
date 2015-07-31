@@ -222,7 +222,6 @@ var GUI = function () {
 		// draw names
 		
 		self.context.scale(scale.x, scale.y);
-
 		self.context.font = styles.fontStyles.playerName;
 		self.context.fillStyle = styles.fontColors[playerNumber - 1];
 		self.context.strokeStyle = 'black';
